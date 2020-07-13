@@ -149,7 +149,7 @@ unzFile ZipArchive::get_file_handle(String p_file) const {
 
 bool ZipArchive::try_open_pack(const String &p_path, bool p_replace_files, size_t p_offset = 0) {
 	//printf("opening zip pack %ls, %i, %i\n", p_name.c_str(), p_name.extension().nocasecmp_to("zip"), p_name.extension().nocasecmp_to("pcz"));
-    // load with offset feature only support for PCK files
+    // load with offset feature only supported for PCK files
     if (p_offset != 0) {
         return false;
     }
