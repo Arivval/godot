@@ -34,7 +34,7 @@
 
 #include <stdio.h>
 
-Error PackedData::add_pack(const String &p_path, bool p_replace_files, int p_offset) {
+Error PackedData::add_pack(const String &p_path, bool p_replace_files, size_t p_offset) {
 	for (int i = 0; i < sources.size(); i++) {
 		if (sources[i]->try_open_pack(p_path, p_replace_files, p_offset)) {
 			return OK;
@@ -123,7 +123,7 @@ PackedData::~PackedData() {
 
 //////////////////////////////////////////////////////////////////
 
-bool PackedSourcePCK::try_open_pack(const String &p_path, bool p_replace_files, int p_offset) {
+bool PackedSourcePCK::try_open_pack(const String &p_path, bool p_replace_files, size_t p_offset) {
 	FileAccess *f = FileAccess::open(p_path, FileAccess::READ);
 	if (!f) {
 		return false;
