@@ -34,9 +34,9 @@
 
 #include <stdio.h>
 
-Error PackedData::add_pack(const String &p_path, bool p_replace_files) {
+Error PackedData::add_pack(const String &p_path, bool p_replace_files, size_t p_offset) {
 	for (int i = 0; i < sources.size(); i++) {
-		if (sources[i]->try_open_pack(p_path, p_replace_files)) {
+		if (sources[i]->try_open_pack(p_path, p_replace_files, p_offset)) {
 			return OK;
 		}
 	}
@@ -123,16 +123,19 @@ PackedData::~PackedData() {
 
 //////////////////////////////////////////////////////////////////
 
-bool PackedSourcePCK::try_open_pack(const String &p_path, bool p_replace_files) {
+bool PackedSourcePCK::try_open_pack(const String &p_path, bool p_replace_files, size_t p_offset) {
 	FileAccess *f = FileAccess::open(p_path, FileAccess::READ);
 	if (!f) {
 		return false;
 	}
 
+	f->seek(p_offset);
+
 	uint32_t magic = f->get_32();
 
-	if (magic != PACK_HEADER_MAGIC) {
+	if (magic != PACK_HEADER_MAGIC && p_offset == 0) {
 		//maybe at the end.... self contained exe
+		// loading with offset feature not supported for self contained exe files
 		f->seek_end();
 		f->seek(f->get_position() - 4);
 		magic = f->get_32();
@@ -191,7 +194,7 @@ bool PackedSourcePCK::try_open_pack(const String &p_path, bool p_replace_files) 
 		uint64_t size = f->get_64();
 		uint8_t md5[16];
 		f->get_buffer(md5, 16);
-		PackedData::get_singleton()->add_path(p_path, path, ofs, size, md5, this, p_replace_files);
+		PackedData::get_singleton()->add_path(p_path, path, ofs + p_offset, size, md5, this, p_replace_files);
 	}
 
 	f->close();
