@@ -129,12 +129,13 @@ bool PackedSourcePCK::try_open_pack(const String &p_path, bool p_replace_files, 
 		return false;
 	}
 
-    f->seek(p_offset);
+	f->seek(p_offset);
 
 	uint32_t magic = f->get_32();
 
 	if (magic != PACK_HEADER_MAGIC && p_offset == 0) {
 		//maybe at the end.... self contained exe
+		// loading with offset feature not supported for self contained exe files
 		f->seek_end();
 		f->seek(f->get_position() - 4);
 		magic = f->get_32();
