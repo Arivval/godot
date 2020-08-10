@@ -4,7 +4,11 @@
 		Image datatype.
 	</brief_description>
 	<description>
+<<<<<<< HEAD
 		Native image datatype. Contains image data, which can be converted to a [Texture2D], and several functions to interact with it. The maximum width and height for an [Image] are [constant MAX_WIDTH] and [constant MAX_HEIGHT].
+=======
+		Native image datatype. Contains image data, which can be converted to a [Texture], and several functions to interact with it. The maximum width and height for an [Image] are [constant MAX_WIDTH] and [constant MAX_HEIGHT].
+>>>>>>> amandotjain/pad_publishing
 		[b]Note:[/b] The maximum image size is 16384×16384 pixels due to graphics hardware limitations. Larger images will fail to import.
 	</description>
 	<tutorials>
@@ -364,6 +368,15 @@
 				Loads an image from the binary contents of a PNG file.
 			</description>
 		</method>
+		<method name="load_tga_from_buffer">
+			<return type="int" enum="Error">
+			</return>
+			<argument index="0" name="buffer" type="PoolByteArray">
+			</argument>
+			<description>
+				Loads an image from the binary contents of a TGA file.
+			</description>
+		</method>
 		<method name="load_webp_from_buffer">
 			<return type="int" enum="Error">
 			</return>
@@ -437,7 +450,11 @@
 			</description>
 		</method>
 		<method name="save_png_to_buffer" qualifiers="const">
+<<<<<<< HEAD
 			<return type="PackedByteArray">
+=======
+			<return type="PoolByteArray">
+>>>>>>> amandotjain/pad_publishing
 			</return>
 			<description>
 			</description>

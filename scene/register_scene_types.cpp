@@ -689,6 +689,11 @@ void register_scene_types() {
 	ClassDB::register_class<ProxyTexture>();
 	ClassDB::register_class<AnimatedTexture>();
 	ClassDB::register_class<CameraTexture>();
+<<<<<<< HEAD
+=======
+	ClassDB::register_class<ExternalTexture>();
+	ClassDB::register_class<CubeMap>();
+>>>>>>> amandotjain/pad_publishing
 	ClassDB::register_virtual_class<TextureLayered>();
 	ClassDB::register_virtual_class<ImageTextureLayered>();
 	ClassDB::register_class<Cubemap>();

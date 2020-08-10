@@ -84,7 +84,11 @@ void EditorAudioBus::_notification(int p_what) {
 			bypass->set_icon(get_theme_icon("AudioBusBypass", "EditorIcons"));
 			bypass->add_theme_color_override("icon_color_pressed", bypass_color);
 
+<<<<<<< HEAD
 			bus_options->set_icon(get_theme_icon("GuiTabMenu", "EditorIcons"));
+=======
+			bus_options->set_icon(get_icon("GuiTabMenuHl", "EditorIcons"));
+>>>>>>> amandotjain/pad_publishing
 
 			update_bus();
 			set_process(true);
@@ -172,7 +176,11 @@ void EditorAudioBus::_notification(int p_what) {
 			mute->set_icon(get_theme_icon("AudioBusMute", "EditorIcons"));
 			bypass->set_icon(get_theme_icon("AudioBusBypass", "EditorIcons"));
 
+<<<<<<< HEAD
 			bus_options->set_icon(get_theme_icon("GuiTabMenu", "EditorIcons"));
+=======
+			bus_options->set_icon(get_icon("GuiTabMenuHl", "EditorIcons"));
+>>>>>>> amandotjain/pad_publishing
 		} break;
 		case NOTIFICATION_MOUSE_EXIT:
 		case NOTIFICATION_DRAG_END: {
@@ -547,7 +555,11 @@ void EditorAudioBus::_gui_input(const Ref<InputEvent> &p_event) {
 
 void EditorAudioBus::_unhandled_key_input(Ref<InputEvent> p_event) {
 	Ref<InputEventKey> k = p_event;
+<<<<<<< HEAD
 	if (k.is_valid() && k->is_pressed() && !k->is_echo() && k->get_keycode() == KEY_DELETE) {
+=======
+	if (k.is_valid() && k->is_pressed() && !k->is_echo() && k->get_scancode() == KEY_DELETE) {
+>>>>>>> amandotjain/pad_publishing
 		TreeItem *current_effect = effects->get_selected();
 		if (current_effect && current_effect->get_metadata(0).get_type() == Variant::INT) {
 			_delete_effect_pressed(0);
@@ -555,6 +567,11 @@ void EditorAudioBus::_unhandled_key_input(Ref<InputEvent> p_event) {
 		}
 	}
 }
+<<<<<<< HEAD
+=======
+
+void EditorAudioBus::_bus_popup_pressed(int p_option) {
+>>>>>>> amandotjain/pad_publishing
 
 void EditorAudioBus::_bus_popup_pressed(int p_option) {
 	if (p_option == 2) {
@@ -750,6 +767,10 @@ void EditorAudioBus::_bind_methods() {
 	ClassDB::bind_method("update_send", &EditorAudioBus::update_send);
 	ClassDB::bind_method("_gui_input", &EditorAudioBus::_gui_input);
 	ClassDB::bind_method("_unhandled_key_input", &EditorAudioBus::_unhandled_key_input);
+<<<<<<< HEAD
+=======
+	ClassDB::bind_method("_bus_popup_pressed", &EditorAudioBus::_bus_popup_pressed);
+>>>>>>> amandotjain/pad_publishing
 	ClassDB::bind_method("get_drag_data_fw", &EditorAudioBus::get_drag_data_fw);
 	ClassDB::bind_method("can_drop_data_fw", &EditorAudioBus::can_drop_data_fw);
 	ClassDB::bind_method("drop_data_fw", &EditorAudioBus::drop_data_fw);

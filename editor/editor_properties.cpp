@@ -610,9 +610,15 @@ public:
 				}
 			}
 		}
+<<<<<<< HEAD
 
 		const Ref<InputEventMouseButton> mb = p_ev;
 
+=======
+
+		const Ref<InputEventMouseButton> mb = p_ev;
+
+>>>>>>> amandotjain/pad_publishing
 		if (mb.is_valid() && mb->get_button_index() == BUTTON_LEFT && mb->is_pressed()) {
 			// Toggle the flag.
 			// We base our choice on the hovered flag, so that it always matches the hovered flag.
@@ -638,7 +644,11 @@ public:
 				const int h = bsize * 2 + 1;
 				const int vofs = (rect.size.height - h) / 2;
 
+<<<<<<< HEAD
 				Color color = get_theme_color("highlight_color", "Editor");
+=======
+				Color color = get_color("highlight_color", "Editor");
+>>>>>>> amandotjain/pad_publishing
 				for (int i = 0; i < 2; i++) {
 					Point2 ofs(4, vofs);
 					if (i == 1)
@@ -779,7 +789,11 @@ EditorPropertyLayers::EditorPropertyLayers() {
 	button = memnew(Button);
 	button->set_toggle_mode(true);
 	button->set_text("...");
+<<<<<<< HEAD
 	button->connect("pressed", callable_mp(this, &EditorPropertyLayers::_button_pressed));
+=======
+	button->connect("pressed", this, "_button_pressed");
+>>>>>>> amandotjain/pad_publishing
 	hb->add_child(button);
 	set_bottom_editor(hb);
 	layers = memnew(PopupMenu);
@@ -2983,8 +2997,16 @@ bool EditorPropertyResource::_is_drop_valid(const Dictionary &p_drag_data) const
 	String allowed_type = base_type;
 
 	Dictionary drag_data = p_drag_data;
-	if (drag_data.has("type") && String(drag_data["type"]) == "resource") {
-		Ref<Resource> res = drag_data["resource"];
+
+	Ref<Resource> res;
+	if (drag_data.has("type") && String(drag_data["type"]) == "script_list_element") {
+		ScriptEditorBase *se = Object::cast_to<ScriptEditorBase>(drag_data["script_list_element"]);
+		res = se->get_edited_resource();
+	} else if (drag_data.has("type") && String(drag_data["type"]) == "resource") {
+		res = drag_data["resource"];
+	}
+
+	if (res.is_valid()) {
 		for (int i = 0; i < allowed_type.get_slice_count(","); i++) {
 			String at = allowed_type.get_slice(",", i).strip_edges();
 			if (res.is_valid() && ClassDB::is_parent_class(res->get_class(), at)) {
@@ -3022,13 +3044,19 @@ void EditorPropertyResource::drop_data_fw(const Point2 &p_point, const Variant &
 	ERR_FAIL_COND(!_is_drop_valid(p_data));
 
 	Dictionary drag_data = p_data;
-	if (drag_data.has("type") && String(drag_data["type"]) == "resource") {
-		Ref<Resource> res = drag_data["resource"];
-		if (res.is_valid()) {
-			emit_changed(get_edited_property(), res);
-			update_property();
-			return;
-		}
+
+	Ref<Resource> res;
+	if (drag_data.has("type") && String(drag_data["type"]) == "script_list_element") {
+		ScriptEditorBase *se = Object::cast_to<ScriptEditorBase>(drag_data["script_list_element"]);
+		res = se->get_edited_resource();
+	} else if (drag_data.has("type") && String(drag_data["type"]) == "resource") {
+		res = drag_data["resource"];
+	}
+
+	if (res.is_valid()) {
+		emit_changed(get_edited_property(), res);
+		update_property();
+		return;
 	}
 
 	if (drag_data.has("type") && String(drag_data["type"]) == "files") {
@@ -3036,9 +3064,9 @@ void EditorPropertyResource::drop_data_fw(const Point2 &p_point, const Variant &
 
 		if (files.size() == 1) {
 			String file = files[0];
-			RES res = ResourceLoader::load(file);
-			if (res.is_valid()) {
-				emit_changed(get_edited_property(), res);
+			RES file_res = ResourceLoader::load(file);
+			if (file_res.is_valid()) {
+				emit_changed(get_edited_property(), file_res);
 				update_property();
 				return;
 			}

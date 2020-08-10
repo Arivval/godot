@@ -350,17 +350,33 @@ void SceneTreeDock::_tool_selected(int p_tool, bool p_confirm_override) {
 			if (!profile_allow_editing) {
 				break;
 			}
-			String preferred = "";
-			Node *current_edited_scene_root = EditorNode::get_singleton()->get_edited_scene();
 
+			// Prefer nodes that inherit from the current scene root.
+			Node *current_edited_scene_root = EditorNode::get_singleton()->get_edited_scene();
 			if (current_edited_scene_root) {
+<<<<<<< HEAD
 				if (ClassDB::is_parent_class(current_edited_scene_root->get_class_name(), "Node2D")) {
 					preferred = "Node2D";
 				} else if (ClassDB::is_parent_class(current_edited_scene_root->get_class_name(), "Node3D")) {
 					preferred = "Node3D";
+=======
+				String root_class = current_edited_scene_root->get_class_name();
+				static Vector<String> preferred_types;
+				if (preferred_types.empty()) {
+					preferred_types.push_back("Control");
+					preferred_types.push_back("Node2D");
+					preferred_types.push_back("Node3D");
+				}
+
+				for (int i = 0; i < preferred_types.size(); i++) {
+					if (ClassDB::is_parent_class(root_class, preferred_types[i])) {
+						create_dialog->set_preferred_search_result_type(preferred_types[i]);
+						break;
+					}
+>>>>>>> amandotjain/pad_publishing
 				}
 			}
-			create_dialog->set_preferred_search_result_type(preferred);
+
 			create_dialog->popup_create(true);
 		} break;
 		case TOOL_INSTANCE: {
@@ -418,6 +434,10 @@ void SceneTreeDock::_tool_selected(int p_tool, bool p_confirm_override) {
 			attach_script_to_selected(false);
 		} break;
 		case TOOL_DETACH_SCRIPT: {
+<<<<<<< HEAD
+=======
+
+>>>>>>> amandotjain/pad_publishing
 			if (!profile_allow_script_editing) {
 				break;
 			}
@@ -429,7 +449,11 @@ void SceneTreeDock::_tool_selected(int p_tool, bool p_confirm_override) {
 			}
 
 			editor_data->get_undo_redo().create_action(TTR("Detach Script"));
+<<<<<<< HEAD
 			editor_data->get_undo_redo().add_do_method(editor, "push_item", (Script *)nullptr);
+=======
+			editor_data->get_undo_redo().add_do_method(editor, "push_item", (Script *)NULL);
+>>>>>>> amandotjain/pad_publishing
 
 			for (int i = 0; i < selection.size(); i++) {
 				Node *n = Object::cast_to<Node>(selection[i]);
@@ -556,6 +580,11 @@ void SceneTreeDock::_tool_selected(int p_tool, bool p_confirm_override) {
 			selection.sort_custom<Node::Comparator>();
 
 			Node *add_below_node = selection.back()->get();
+<<<<<<< HEAD
+=======
+
+			for (List<Node *>::Element *E = selection.front(); E; E = E->next()) {
+>>>>>>> amandotjain/pad_publishing
 
 			for (List<Node *>::Element *E = selection.front(); E; E = E->next()) {
 				Node *node = E->get();
@@ -579,7 +608,12 @@ void SceneTreeDock::_tool_selected(int p_tool, bool p_confirm_override) {
 
 				dup->set_name(parent->validate_child_name(dup));
 
+<<<<<<< HEAD
 				editor_data->get_undo_redo().add_do_method(add_below_node, "add_sibling", dup);
+=======
+				editor_data->get_undo_redo().add_do_method(parent, "add_child_below_node", add_below_node, dup);
+				for (List<Node *>::Element *F = owned.front(); F; F = F->next()) {
+>>>>>>> amandotjain/pad_publishing
 
 				for (List<Node *>::Element *F = owned.front(); F; F = F->next()) {
 					if (!duplimap.has(F->get())) {
@@ -597,6 +631,12 @@ void SceneTreeDock::_tool_selected(int p_tool, bool p_confirm_override) {
 				editor_data->get_undo_redo().add_do_method(ed, "live_debug_duplicate_node", edited_scene->get_path_to(node), dup->get_name());
 				editor_data->get_undo_redo().add_undo_method(ed, "live_debug_remove_node", NodePath(String(edited_scene->get_path_to(parent)).plus_file(dup->get_name())));
 
+<<<<<<< HEAD
+=======
+				editor_data->get_undo_redo().add_do_method(sed, "live_debug_duplicate_node", edited_scene->get_path_to(node), dup->get_name());
+				editor_data->get_undo_redo().add_undo_method(sed, "live_debug_remove_node", NodePath(String(edited_scene->get_path_to(parent)).plus_file(dup->get_name())));
+
+>>>>>>> amandotjain/pad_publishing
 				add_below_node = dup;
 			}
 
@@ -606,7 +646,11 @@ void SceneTreeDock::_tool_selected(int p_tool, bool p_confirm_override) {
 				editor->push_item(dupsingle);
 			}
 
+<<<<<<< HEAD
 			for (List<Node *>::Element *E = editable_children.back(); E; E = E->prev()) {
+=======
+			for (List<Node *>::Element *E = editable_children.back(); E; E = E->prev())
+>>>>>>> amandotjain/pad_publishing
 				_toggle_editable_children(E->get());
 			}
 
@@ -736,16 +780,27 @@ void SceneTreeDock::_tool_selected(int p_tool, bool p_confirm_override) {
 				_delete_confirm();
 
 			} else {
-				if (remove_list.size() >= 2) {
-					delete_dialog->set_text(vformat(TTR("Delete %d nodes?"), remove_list.size()));
-				} else if (remove_list.size() == 1 && remove_list[0] == editor_data->get_edited_scene_root()) {
-					delete_dialog->set_text(vformat(TTR("Delete the root node \"%s\"?"), remove_list[0]->get_name()));
-				} else if (remove_list.size() == 1 && remove_list[0]->get_filename() == "" && remove_list[0]->get_child_count() >= 1) {
-					// Display this message only for non-instanced scenes
-					delete_dialog->set_text(vformat(TTR("Delete node \"%s\" and its children?"), remove_list[0]->get_name()));
+				String msg;
+				if (remove_list.size() > 1) {
+					bool any_children = false;
+					for (int i = 0; !any_children && i < remove_list.size(); i++) {
+						any_children = remove_list[i]->get_child_count() > 0;
+					}
+
+					msg = vformat(any_children ? TTR("Delete %d nodes and any children?") : TTR("Delete %d nodes?"), remove_list.size());
 				} else {
-					delete_dialog->set_text(vformat(TTR("Delete node \"%s\"?"), remove_list[0]->get_name()));
+					Node *node = remove_list[0];
+					if (node == editor_data->get_edited_scene_root()) {
+						msg = vformat(TTR("Delete the root node \"%s\"?"), node->get_name());
+					} else if (node->get_filename() == "" && node->get_child_count() > 0) {
+						// Display this message only for non-instanced scenes
+						msg = vformat(TTR("Delete node \"%s\" and its children?"), node->get_name());
+					} else {
+						msg = vformat(TTR("Delete node \"%s\"?"), node->get_name());
+					}
 				}
+
+				delete_dialog->set_text(msg);
 
 				// Resize the dialog to its minimum size.
 				// This prevents the dialog from being too wide after displaying
@@ -1058,10 +1113,17 @@ void SceneTreeDock::_notification(int p_what) {
 			spatial_editor_plugin->get_spatial_editor()->connect_compat("item_lock_status_changed", scene_tree, "_update_tree");
 			spatial_editor_plugin->get_spatial_editor()->connect_compat("item_group_status_changed", scene_tree, "_update_tree");
 
+<<<<<<< HEAD
 			button_add->set_icon(get_theme_icon("Add", "EditorIcons"));
 			button_instance->set_icon(get_theme_icon("Instance", "EditorIcons"));
 			button_create_script->set_icon(get_theme_icon("ScriptCreate", "EditorIcons"));
 			button_detach_script->set_icon(get_theme_icon("ScriptRemove", "EditorIcons"));
+=======
+			button_add->set_icon(get_icon("Add", "EditorIcons"));
+			button_instance->set_icon(get_icon("Instance", "EditorIcons"));
+			button_create_script->set_icon(get_icon("ScriptCreate", "EditorIcons"));
+			button_detach_script->set_icon(get_icon("ScriptRemove", "EditorIcons"));
+>>>>>>> amandotjain/pad_publishing
 
 			filter->set_right_icon(get_theme_icon("Search", "EditorIcons"));
 			filter->set_clear_button_enabled(true);
@@ -1136,10 +1198,17 @@ void SceneTreeDock::_notification(int p_what) {
 			clear_inherit_confirm->disconnect("confirmed", callable_mp(this, &SceneTreeDock::_tool_selected));
 		} break;
 		case EditorSettings::NOTIFICATION_EDITOR_SETTINGS_CHANGED: {
+<<<<<<< HEAD
 			button_add->set_icon(get_theme_icon("Add", "EditorIcons"));
 			button_instance->set_icon(get_theme_icon("Instance", "EditorIcons"));
 			button_create_script->set_icon(get_theme_icon("ScriptCreate", "EditorIcons"));
 			button_detach_script->set_icon(get_theme_icon("ScriptRemove", "EditorIcons"));
+=======
+			button_add->set_icon(get_icon("Add", "EditorIcons"));
+			button_instance->set_icon(get_icon("Instance", "EditorIcons"));
+			button_create_script->set_icon(get_icon("ScriptCreate", "EditorIcons"));
+			button_detach_script->set_icon(get_icon("ScriptRemove", "EditorIcons"));
+>>>>>>> amandotjain/pad_publishing
 
 			filter->set_right_icon(get_theme_icon("Search", "EditorIcons"));
 			filter->set_clear_button_enabled(true);
@@ -2064,7 +2133,10 @@ void SceneTreeDock::replace_node(Node *p_node, Node *p_by_node, bool p_keep_prop
 		for (List<PropertyInfo>::Element *E = pinfo.front(); E; E = E->next()) {
 			if (!(E->get().usage & PROPERTY_USAGE_STORAGE)) {
 				continue;
+<<<<<<< HEAD
 			}
+=======
+>>>>>>> amandotjain/pad_publishing
 
 			if (E->get().name == "__meta__") {
 				if (Object::cast_to<CanvasItem>(newnode)) {
@@ -2436,7 +2508,11 @@ void SceneTreeDock::_tree_rmb(const Vector2 &p_menu_pos) {
 		}
 		if (existing_script.is_valid() && existing_script_removable) {
 			add_separator = true;
+<<<<<<< HEAD
 			menu->add_icon_shortcut(get_theme_icon("ScriptRemove", "EditorIcons"), ED_GET_SHORTCUT("scene_tree/detach_script"), TOOL_DETACH_SCRIPT);
+=======
+			menu->add_icon_shortcut(get_icon("ScriptRemove", "EditorIcons"), ED_GET_SHORTCUT("scene_tree/detach_script"), TOOL_DETACH_SCRIPT);
+>>>>>>> amandotjain/pad_publishing
 		} else if (full_selection.size() > 1) {
 			bool script_exists = false;
 			for (List<Node *>::Element *E = full_selection.front(); E; E = E->next()) {
@@ -2448,7 +2524,11 @@ void SceneTreeDock::_tree_rmb(const Vector2 &p_menu_pos) {
 
 			if (script_exists) {
 				add_separator = true;
+<<<<<<< HEAD
 				menu->add_icon_shortcut(get_theme_icon("ScriptRemove", "EditorIcons"), ED_GET_SHORTCUT("scene_tree/detach_script"), TOOL_DETACH_SCRIPT);
+=======
+				menu->add_icon_shortcut(get_icon("ScriptRemove", "EditorIcons"), ED_GET_SHORTCUT("scene_tree/detach_script"), TOOL_DETACH_SCRIPT);
+>>>>>>> amandotjain/pad_publishing
 			}
 		}
 
@@ -2659,10 +2739,18 @@ void SceneTreeDock::_remote_tree_selected() {
 }
 
 void SceneTreeDock::_local_tree_selected() {
+<<<<<<< HEAD
 	if (!bool(EDITOR_GET("interface/editors/show_scene_tree_root_selection")) || get_tree()->get_edited_scene_root() != nullptr) {
 		scene_tree->show();
 	}
 	if (remote_tree) {
+=======
+
+	if (!bool(EDITOR_GET("interface/editors/show_scene_tree_root_selection")) || get_tree()->get_edited_scene_root() != nullptr) {
+		scene_tree->show();
+	}
+	if (remote_tree)
+>>>>>>> amandotjain/pad_publishing
 		remote_tree->hide();
 	}
 	edit_remote->set_pressed(false);
@@ -2824,17 +2912,27 @@ SceneTreeDock::SceneTreeDock(EditorNode *p_editor, Node *p_scene_root, EditorSel
 	filter->add_theme_constant_override("minimum_spaces", 0);
 	filter->connect("text_changed", callable_mp(this, &SceneTreeDock::_filter_changed));
 
+<<<<<<< HEAD
 	button_create_script = memnew(Button);
 	button_create_script->set_flat(true);
 	button_create_script->connect("pressed", callable_mp(this, &SceneTreeDock::_tool_selected), make_binds(TOOL_ATTACH_SCRIPT, false));
+=======
+	button_create_script = memnew(ToolButton);
+	button_create_script->connect("pressed", this, "_tool_selected", make_binds(TOOL_ATTACH_SCRIPT, false));
+>>>>>>> amandotjain/pad_publishing
 	button_create_script->set_tooltip(TTR("Attach a new or existing script to the selected node."));
 	button_create_script->set_shortcut(ED_GET_SHORTCUT("scene_tree/attach_script"));
 	filter_hbc->add_child(button_create_script);
 	button_create_script->hide();
 
+<<<<<<< HEAD
 	button_detach_script = memnew(Button);
 	button_detach_script->set_flat(true);
 	button_detach_script->connect("pressed", callable_mp(this, &SceneTreeDock::_tool_selected), make_binds(TOOL_DETACH_SCRIPT, false));
+=======
+	button_detach_script = memnew(ToolButton);
+	button_detach_script->connect("pressed", this, "_tool_selected", make_binds(TOOL_DETACH_SCRIPT, false));
+>>>>>>> amandotjain/pad_publishing
 	button_detach_script->set_tooltip(TTR("Detach the script from the selected node."));
 	button_detach_script->set_shortcut(ED_GET_SHORTCUT("scene_tree/detach_script"));
 	filter_hbc->add_child(button_detach_script);

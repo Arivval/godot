@@ -30,7 +30,12 @@
 
 package org.godotengine.godot.utils;
 
+<<<<<<< HEAD
 import android.app.Activity;
+=======
+import org.godotengine.godot.Godot;
+
+>>>>>>> amandotjain/pad_publishing
 import android.content.Context;
 import android.net.wifi.WifiManager;
 import android.util.Log;

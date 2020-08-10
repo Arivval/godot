@@ -157,7 +157,11 @@ namespace GodotTools.Ides
             }
         }
 
+<<<<<<< HEAD
         public readonly struct EditorPick
+=======
+        public struct EditorPick
+>>>>>>> amandotjain/pad_publishing
         {
             private readonly string identity;
 

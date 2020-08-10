@@ -36,7 +36,10 @@
 
 #include "test_astar.h"
 #include "test_basis.h"
+<<<<<<< HEAD
 #include "test_class_db.h"
+=======
+>>>>>>> amandotjain/pad_publishing
 #include "test_gdscript.h"
 #include "test_gui.h"
 #include "test_math.h"
@@ -53,6 +56,10 @@ const char **tests_get_names() {
 		"string",
 		"math",
 		"basis",
+<<<<<<< HEAD
+=======
+		"physics",
+>>>>>>> amandotjain/pad_publishing
 		"physics_2d",
 		"physics_3d",
 		"render",
@@ -82,7 +89,17 @@ MainLoop *test_main(String p_test, const List<String> &p_args) {
 	}
 
 	if (p_test == "basis") {
+<<<<<<< HEAD
 		return TestBasis::test();
+=======
+
+		return TestBasis::test();
+	}
+
+	if (p_test == "physics") {
+
+		return TestPhysics::test();
+>>>>>>> amandotjain/pad_publishing
 	}
 
 	if (p_test == "physics_2d") {

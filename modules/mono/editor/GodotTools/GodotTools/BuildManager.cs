@@ -175,7 +175,11 @@ namespace GodotTools
             {
                 pr.Step("Building project solution", 0);
 
+<<<<<<< HEAD
                 var buildInfo = new BuildInfo(GodotSharpDirs.ProjectSlnPath, targets: new[] {"Build"}, config, restore: true);
+=======
+                var buildInfo = new BuildInfo(GodotSharpDirs.ProjectSlnPath, new[] {"Build"}, config, restore: true);
+>>>>>>> amandotjain/pad_publishing
 
                 bool escapeNeedsDoubleBackslash = buildTool == BuildTool.MsBuildMono || buildTool == BuildTool.DotnetCli;
 

@@ -31,12 +31,14 @@
 #include "packet_peer_udp.h"
 
 #include "core/io/ip.h"
+#include "core/io/udp_server.h"
 
 void PacketPeerUDP::set_blocking_mode(bool p_enable) {
 	blocking = p_enable;
 }
 
 void PacketPeerUDP::set_broadcast_enabled(bool p_enabled) {
+	ERR_FAIL_COND(udp_server);
 	broadcast = p_enabled;
 	if (_sock.is_valid() && _sock->is_open()) {
 		_sock->set_broadcasting_enabled(p_enabled);
@@ -44,6 +46,10 @@ void PacketPeerUDP::set_broadcast_enabled(bool p_enabled) {
 }
 
 Error PacketPeerUDP::join_multicast_group(IP_Address p_multi_address, String p_if_name) {
+<<<<<<< HEAD
+=======
+	ERR_FAIL_COND_V(udp_server, ERR_LOCKED);
+>>>>>>> amandotjain/pad_publishing
 	ERR_FAIL_COND_V(!_sock.is_valid(), ERR_UNAVAILABLE);
 	ERR_FAIL_COND_V(!p_multi_address.is_valid(), ERR_INVALID_PARAMETER);
 
@@ -58,6 +64,10 @@ Error PacketPeerUDP::join_multicast_group(IP_Address p_multi_address, String p_i
 }
 
 Error PacketPeerUDP::leave_multicast_group(IP_Address p_multi_address, String p_if_name) {
+<<<<<<< HEAD
+=======
+	ERR_FAIL_COND_V(udp_server, ERR_LOCKED);
+>>>>>>> amandotjain/pad_publishing
 	ERR_FAIL_COND_V(!_sock.is_valid(), ERR_UNAVAILABLE);
 	ERR_FAIL_COND_V(!_sock->is_open(), ERR_UNCONFIGURED);
 	return _sock->leave_multicast_group(p_multi_address, p_if_name);
@@ -130,7 +140,11 @@ Error PacketPeerUDP::put_packet(const uint8_t *p_buffer, int p_buffer_size) {
 	}
 
 	do {
+<<<<<<< HEAD
 		if (connected) {
+=======
+		if (connected && !udp_server) {
+>>>>>>> amandotjain/pad_publishing
 			err = _sock->send(p_buffer, p_buffer_size, sent);
 		} else {
 			err = _sock->sendto(p_buffer, p_buffer_size, sent, peer_addr, peer_port);
@@ -186,6 +200,7 @@ Error PacketPeerUDP::listen(int p_port, const IP_Address &p_bind_address, int p_
 	return OK;
 }
 
+<<<<<<< HEAD
 Error PacketPeerUDP::connect_socket(Ref<NetSocket> p_sock) {
 	Error err;
 	int read = 0;
@@ -206,10 +221,32 @@ Error PacketPeerUDP::connect_socket(Ref<NetSocket> p_sock) {
 }
 
 Error PacketPeerUDP::connect_to_host(const IP_Address &p_host, int p_port) {
+=======
+Error PacketPeerUDP::connect_shared_socket(Ref<NetSocket> p_sock, IP_Address p_ip, uint16_t p_port, UDPServer *p_server) {
+	udp_server = p_server;
+	connected = true;
+	_sock = p_sock;
+	peer_addr = p_ip;
+	peer_port = p_port;
+	packet_ip = peer_addr;
+	packet_port = peer_port;
+	return OK;
+}
+
+void PacketPeerUDP::disconnect_shared_socket() {
+	udp_server = nullptr;
+	_sock = Ref<NetSocket>(NetSocket::create());
+	close();
+}
+
+Error PacketPeerUDP::connect_to_host(const IP_Address &p_host, int p_port) {
+	ERR_FAIL_COND_V(udp_server, ERR_LOCKED);
+>>>>>>> amandotjain/pad_publishing
 	ERR_FAIL_COND_V(!_sock.is_valid(), ERR_UNAVAILABLE);
 	ERR_FAIL_COND_V(!p_host.is_valid(), ERR_INVALID_PARAMETER);
 
 	Error err;
+<<<<<<< HEAD
 
 	if (!_sock->is_open()) {
 		IP::Type ip_type = p_host.is_ipv4() ? IP::TYPE_IPV4 : IP::TYPE_IPV6;
@@ -228,6 +265,26 @@ Error PacketPeerUDP::connect_to_host(const IP_Address &p_host, int p_port) {
 		ERR_FAIL_V_MSG(FAILED, "Unable to connect");
 	}
 
+=======
+
+	if (!_sock->is_open()) {
+		IP::Type ip_type = p_host.is_ipv4() ? IP::TYPE_IPV4 : IP::TYPE_IPV6;
+		err = _sock->open(NetSocket::TYPE_UDP, ip_type);
+		ERR_FAIL_COND_V(err != OK, ERR_CANT_OPEN);
+		_sock->set_blocking_enabled(false);
+	}
+
+	err = _sock->connect_to_host(p_host, p_port);
+
+	// I see no reason why we should get ERR_BUSY (wouldblock/eagain) here.
+	// This is UDP, so connect is only used to tell the OS to which socket
+	// it shuold deliver packets when multiple are bound on the same address/port.
+	if (err != OK) {
+		close();
+		ERR_FAIL_V_MSG(FAILED, "Unable to connect");
+	}
+
+>>>>>>> amandotjain/pad_publishing
 	connected = true;
 
 	peer_addr = p_host;
@@ -243,7 +300,15 @@ bool PacketPeerUDP::is_connected_to_host() const {
 }
 
 void PacketPeerUDP::close() {
+<<<<<<< HEAD
 	if (_sock.is_valid()) {
+=======
+	if (udp_server) {
+		udp_server->remove_peer(peer_addr, peer_port);
+		udp_server = nullptr;
+		_sock = Ref<NetSocket>(NetSocket::create());
+	} else if (_sock.is_valid()) {
+>>>>>>> amandotjain/pad_publishing
 		_sock->close();
 	}
 	rb.resize(16);
@@ -261,6 +326,9 @@ Error PacketPeerUDP::_poll() {
 
 	if (!_sock->is_open()) {
 		return FAILED;
+	}
+	if (udp_server) {
+		return OK; // Handled by UDPServer.
 	}
 
 	Error err;
@@ -284,23 +352,39 @@ Error PacketPeerUDP::_poll() {
 			return FAILED;
 		}
 
-		if (rb.space_left() < read + 24) {
+		err = store_packet(ip, port, recv_buffer, read);
 #ifdef TOOLS_ENABLED
+<<<<<<< HEAD
 			WARN_PRINT("Buffer full, dropping packets!");
 #endif
 			continue;
+=======
+		if (err != OK) {
+			WARN_PRINT("Buffer full, dropping packets!");
+>>>>>>> amandotjain/pad_publishing
 		}
-
-		uint32_t port32 = port;
-		rb.write(ip.get_ipv6(), 16);
-		rb.write((uint8_t *)&port32, 4);
-		rb.write((uint8_t *)&read, 4);
-		rb.write(recv_buffer, read);
-		++queue_count;
+#endif
 	}
 
 	return OK;
 }
+<<<<<<< HEAD
+=======
+
+Error PacketPeerUDP::store_packet(IP_Address p_ip, uint32_t p_port, uint8_t *p_buf, int p_buf_size) {
+	if (rb.space_left() < p_buf_size + 24) {
+		return ERR_OUT_OF_MEMORY;
+	}
+	rb.write(p_ip.get_ipv6(), 16);
+	rb.write((uint8_t *)&p_port, 4);
+	rb.write((uint8_t *)&p_buf_size, 4);
+	rb.write(p_buf, p_buf_size);
+	++queue_count;
+	return OK;
+}
+
+bool PacketPeerUDP::is_listening() const {
+>>>>>>> amandotjain/pad_publishing
 
 bool PacketPeerUDP::is_listening() const {
 	return _sock.is_valid() && _sock->is_open();
@@ -315,6 +399,10 @@ int PacketPeerUDP::get_packet_port() const {
 }
 
 void PacketPeerUDP::set_dest_address(const IP_Address &p_address, int p_port) {
+<<<<<<< HEAD
+=======
+
+>>>>>>> amandotjain/pad_publishing
 	ERR_FAIL_COND_MSG(connected, "Destination address cannot be set for connected sockets");
 	peer_addr = p_address;
 	peer_port = p_port;
@@ -336,6 +424,16 @@ void PacketPeerUDP::_bind_methods() {
 }
 
 PacketPeerUDP::PacketPeerUDP() :
+<<<<<<< HEAD
+=======
+		packet_port(0),
+		queue_count(0),
+		peer_port(0),
+		connected(false),
+		blocking(true),
+		broadcast(false),
+		udp_server(nullptr),
+>>>>>>> amandotjain/pad_publishing
 		_sock(Ref<NetSocket>(NetSocket::create())) {
 	rb.resize(16);
 }

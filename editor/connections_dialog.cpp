@@ -110,6 +110,11 @@ public:
 void ConnectDialog::ok_pressed() {
 	String method_name = dst_method->get_text();
 
+<<<<<<< HEAD
+=======
+	String method_name = dst_method->get_text();
+
+>>>>>>> amandotjain/pad_publishing
 	if (method_name == "") {
 		error->set_text(TTR("Method in target node must be specified."));
 		error->popup_centered();
@@ -122,6 +127,15 @@ void ConnectDialog::ok_pressed() {
 		return;
 	}
 
+<<<<<<< HEAD
+=======
+	if (!method_name.strip_edges().is_valid_identifier()) {
+		error->set_text(TTR("Method name must be a valid identifier."));
+		error->popup_centered();
+		return;
+	}
+
+>>>>>>> amandotjain/pad_publishing
 	Node *target = tree->get_selected();
 	if (!target) {
 		return; // Nothing selected in the tree, not an error.
@@ -271,6 +285,12 @@ void ConnectDialog::_notification(int p_what) {
 
 void ConnectDialog::_bind_methods() {
 	ClassDB::bind_method("_cancel", &ConnectDialog::_cancel_pressed);
+<<<<<<< HEAD
+=======
+	ClassDB::bind_method("_tree_node_selected", &ConnectDialog::_tree_node_selected);
+	ClassDB::bind_method("_add_bind", &ConnectDialog::_add_bind);
+	ClassDB::bind_method("_remove_bind", &ConnectDialog::_remove_bind);
+>>>>>>> amandotjain/pad_publishing
 	ClassDB::bind_method("_update_ok_enabled", &ConnectDialog::_update_ok_enabled);
 
 	ADD_SIGNAL(MethodInfo("connected"));
@@ -410,8 +430,13 @@ ConnectDialog::ConnectDialog() {
 
 	tree = memnew(SceneTreeEditor(false));
 	tree->set_connecting_signal(true);
+<<<<<<< HEAD
 	tree->get_scene_tree()->connect("item_activated", callable_mp(this, &ConnectDialog::_item_activated));
 	tree->connect("node_selected", callable_mp(this, &ConnectDialog::_tree_node_selected));
+=======
+	tree->get_scene_tree()->connect("item_activated", this, "_ok");
+	tree->connect("node_selected", this, "_tree_node_selected");
+>>>>>>> amandotjain/pad_publishing
 	tree->set_connect_to_script_mode(true);
 
 	Node *mc = vbc_left->add_margin_child(TTR("Connect to Script:"), tree, true);

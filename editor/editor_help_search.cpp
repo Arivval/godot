@@ -332,6 +332,7 @@ bool EditorHelpSearch::Runner::_phase_match_classes() {
 			if (search_flags & SEARCH_METHODS) {
 				for (int i = 0; i < class_doc.methods.size(); i++) {
 					String method_name = (search_flags & SEARCH_CASE_SENSITIVE) ? class_doc.methods[i].name : class_doc.methods[i].name.to_lower();
+<<<<<<< HEAD
 					String aux_term = (search_flags & SEARCH_CASE_SENSITIVE) ? term : term.to_lower();
 
 					if (aux_term.begins_with(".")) {
@@ -343,6 +344,12 @@ bool EditorHelpSearch::Runner::_phase_match_classes() {
 					}
 
 					if (aux_term.is_subsequence_of(method_name)) {
+=======
+					if (method_name.find(term) > -1 ||
+							(term.begins_with(".") && method_name.begins_with(term.right(1))) ||
+							(term.ends_with("(") && method_name.ends_with(term.left(term.length() - 1).strip_edges())) ||
+							(term.begins_with(".") && term.ends_with("(") && method_name == term.substr(1, term.length() - 2).strip_edges())) {
+>>>>>>> amandotjain/pad_publishing
 						match.methods.push_back(const_cast<DocData::MethodDoc *>(&class_doc.methods[i]));
 					}
 				}
@@ -448,9 +455,15 @@ bool EditorHelpSearch::Runner::_phase_select_match() {
 
 bool EditorHelpSearch::Runner::_match_string(const String &p_term, const String &p_string) const {
 	if (search_flags & SEARCH_CASE_SENSITIVE) {
+<<<<<<< HEAD
 		return p_term.is_subsequence_of(p_string);
 	} else {
 		return p_term.is_subsequence_ofi(p_string);
+=======
+		return p_string.find(p_term) > -1;
+	} else {
+		return p_string.findn(p_term) > -1;
+>>>>>>> amandotjain/pad_publishing
 	}
 }
 

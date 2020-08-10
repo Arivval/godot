@@ -80,6 +80,11 @@ void GDScriptParser::_set_end_statement_error(String p_name) {
 	}
 	_set_error(error_msg);
 }
+<<<<<<< HEAD
+=======
+
+bool GDScriptParser::_enter_indent_block(BlockNode *p_block) {
+>>>>>>> amandotjain/pad_publishing
 
 bool GDScriptParser::_enter_indent_block(BlockNode *p_block) {
 	if (tokenizer->get_token() != GDScriptTokenizer::TK_COLON) {
@@ -2102,12 +2107,20 @@ GDScriptParser::Node *GDScriptParser::_parse_and_reduce_expression(Node *p_paren
 }
 
 bool GDScriptParser::_reduce_export_var_type(Variant &p_value, int p_line) {
+<<<<<<< HEAD
 	if (p_value.get_type() == Variant::ARRAY) {
 		Array arr = p_value;
 		for (int i = 0; i < arr.size(); i++) {
 			if (!_reduce_export_var_type(arr[i], p_line)) {
 				return false;
 			}
+=======
+
+	if (p_value.get_type() == Variant::ARRAY) {
+		Array arr = p_value;
+		for (int i = 0; i < arr.size(); i++) {
+			if (!_reduce_export_var_type(arr[i], p_line)) return false;
+>>>>>>> amandotjain/pad_publishing
 		}
 		return true;
 	}
@@ -2116,9 +2129,13 @@ bool GDScriptParser::_reduce_export_var_type(Variant &p_value, int p_line) {
 		Dictionary dict = p_value;
 		for (int i = 0; i < dict.size(); i++) {
 			Variant value = dict.get_value_at_index(i);
+<<<<<<< HEAD
 			if (!_reduce_export_var_type(value, p_line)) {
 				return false;
 			}
+=======
+			if (!_reduce_export_var_type(value, p_line)) return false;
+>>>>>>> amandotjain/pad_publishing
 		}
 		return true;
 	}
@@ -2135,6 +2152,11 @@ bool GDScriptParser::_reduce_export_var_type(Variant &p_value, int p_line) {
 	_set_error("Invalid export type. Only built-in and native resource types can be exported.", p_line);
 	return false;
 }
+<<<<<<< HEAD
+=======
+
+bool GDScriptParser::_recover_from_completion() {
+>>>>>>> amandotjain/pad_publishing
 
 bool GDScriptParser::_recover_from_completion() {
 	if (!completion_found) {
@@ -3168,7 +3190,10 @@ void GDScriptParser::_parse_block(BlockNode *p_block, bool p_static) {
 				current_block = p_block;
 				if (error_set) {
 					return;
+<<<<<<< HEAD
 				}
+=======
+>>>>>>> amandotjain/pad_publishing
 				p_block->statements.push_back(cf_while);
 			} break;
 			case GDScriptTokenizer::TK_CF_FOR: {
@@ -3324,7 +3349,10 @@ void GDScriptParser::_parse_block(BlockNode *p_block, bool p_static) {
 
 				if (error_set) {
 					return;
+<<<<<<< HEAD
 				}
+=======
+>>>>>>> amandotjain/pad_publishing
 				p_block->statements.push_back(cf_for);
 			} break;
 			case GDScriptTokenizer::TK_CF_CONTINUE: {
@@ -4072,7 +4100,14 @@ void GDScriptParser::_parse_class(ClassNode *p_class) {
 								while (true) {
 									current_function = function;
 									Node *arg = _parse_and_reduce_expression(p_class, _static);
+<<<<<<< HEAD
 									current_function = nullptr;
+=======
+									if (!arg) {
+										return;
+									}
+									current_function = NULL;
+>>>>>>> amandotjain/pad_publishing
 									cparent->arguments.push_back(arg);
 
 									if (tokenizer->get_token() == GDScriptTokenizer::TK_COMMA) {
@@ -4107,6 +4142,10 @@ void GDScriptParser::_parse_class(ClassNode *p_class) {
 				}
 
 				if (!_enter_indent_block(block)) {
+<<<<<<< HEAD
+=======
+
+>>>>>>> amandotjain/pad_publishing
 					_set_error(vformat("Indented block expected after declaration of \"%s\" function.", function->name));
 					return;
 				}
@@ -4969,9 +5008,13 @@ void GDScriptParser::_parse_class(ClassNode *p_class) {
 							return;
 						}
 
+<<<<<<< HEAD
 						if (!_reduce_export_var_type(cn->value, member.line)) {
 							return;
 						}
+=======
+						if (!_reduce_export_var_type(cn->value, member.line)) return;
+>>>>>>> amandotjain/pad_publishing
 
 						member._export.type = cn->value.get_type();
 						member._export.usage |= PROPERTY_USAGE_SCRIPT_VARIABLE;
@@ -5342,6 +5385,11 @@ void GDScriptParser::_parse_class(ClassNode *p_class) {
 			case GDScriptTokenizer::TK_CF_PASS: {
 				tokenizer->advance();
 			} break;
+<<<<<<< HEAD
+=======
+
+			default: {
+>>>>>>> amandotjain/pad_publishing
 
 			default: {
 				_set_error(String() + "Unexpected token: " + tokenizer->get_token_name(tokenizer->get_token()) + ":" + tokenizer->get_token_identifier());
@@ -7037,7 +7085,11 @@ bool GDScriptParser::_get_function_signature(DataType &p_base_type, const String
 	}
 
 	r_default_arg_count = method->get_default_argument_count();
-	r_return_type = _type_from_property(method->get_return_info(), false);
+	if (method->get_name() == "get_script") {
+		r_return_type = DataType(); // Variant for now and let runtime decide.
+	} else {
+		r_return_type = _type_from_property(method->get_return_info(), false);
+	}
 	r_vararg = method->is_vararg();
 
 	for (int i = 0; i < method->get_argument_count(); i++) {
@@ -7250,6 +7302,7 @@ GDScriptParser::DataType GDScriptParser::_reduce_function_call_type(const Operat
 
 			DataType original_type = base_type;
 			bool is_initializer = callee_name == "new";
+			bool is_get_script = p_call->arguments[0]->type == Node::TYPE_SELF && callee_name == "get_script";
 			bool is_static = false;
 			bool valid = false;
 
@@ -7266,6 +7319,14 @@ GDScriptParser::DataType GDScriptParser::_reduce_function_call_type(const Operat
 				return_type.is_meta_type = false;
 
 				valid = true; // There's always an initializer, we can assume this is true
+			}
+
+			if (is_get_script) {
+				// get_script() can be considered a meta-type.
+				return_type.kind = DataType::CLASS;
+				return_type.class_type = static_cast<ClassNode *>(head);
+				return_type.is_meta_type = true;
+				valid = true;
 			}
 
 			if (!valid) {
@@ -7385,9 +7446,14 @@ bool GDScriptParser::_get_member_type(const DataType &p_base_type, const StringN
 
 	while (base) {
 		if (base->constant_expressions.has(p_member)) {
+<<<<<<< HEAD
 			if (r_is_const) {
 				*r_is_const = true;
 			}
+=======
+			if (r_is_const)
+				*r_is_const = true;
+>>>>>>> amandotjain/pad_publishing
 			r_member_type = base->constant_expressions[p_member].expression->get_datatype();
 			return true;
 		}
@@ -7470,7 +7536,11 @@ bool GDScriptParser::_get_member_type(const DataType &p_base_type, const StringN
 		}
 	}
 
+<<<<<<< HEAD
 #define IS_USAGE_MEMBER(m_usage) (!(m_usage & (PROPERTY_USAGE_GROUP | PROPERTY_USAGE_SUBGROUP | PROPERTY_USAGE_CATEGORY)))
+=======
+#define IS_USAGE_MEMBER(m_usage) (!(m_usage & (PROPERTY_USAGE_GROUP | PROPERTY_USAGE_CATEGORY)))
+>>>>>>> amandotjain/pad_publishing
 
 	// Check other script types
 	while (scr.is_valid()) {

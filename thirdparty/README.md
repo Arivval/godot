@@ -23,6 +23,7 @@ Files extracted from upstream source:
 - `rm -f code/Common/ZipArchiveIOSystem.cpp include/assimp/ZipArchiveIOSystem.h
    include/assimp/irrXMLWrapper.h`
 
+<<<<<<< HEAD
 
 ## basis_universal
 
@@ -36,11 +37,17 @@ Files extracted from upstream source:
 - `.cpp`, `.h` and `.inc` files in `transcoder/`, keeping folder structure
 - `LICENSE`
 
+=======
+>>>>>>> amandotjain/pad_publishing
 
 ## bullet
 
 - Upstream: https://github.com/bulletphysics/bullet3
+<<<<<<< HEAD
 - Version: git pre-2.90 (cd8cf7521cbb8b7808126a6adebd47bb83ea166a, 2020)
+=======
+- Version: 2.89 (2019)
+>>>>>>> amandotjain/pad_publishing
 - License: zlib
 
 Important: Synced with a pre-release version of bullet 2.90 from the master branch.
@@ -140,7 +147,11 @@ Use UI font variant if available, because it has tight vertical metrics and good
 ## freetype
 
 - Upstream: https://www.freetype.org
+<<<<<<< HEAD
 - Version: 2.10.2 (2020)
+=======
+- Version: 2.10.1 (2019)
+>>>>>>> amandotjain/pad_publishing
 - License: FreeType License (BSD-like)
 
 Files extracted from upstream source:
@@ -304,10 +315,14 @@ changes are marked with `// -- GODOT --` comments.
 ## mbedtls
 
 - Upstream: https://tls.mbed.org/
+<<<<<<< HEAD
 - Version: 2.16.6 (2020)
+=======
+- Version: 2.16.7 (2020)
+>>>>>>> amandotjain/pad_publishing
 - License: Apache 2.0
 
-File extracted from upstream release tarball (`-apache.tgz` variant):
+File extracted from upstream release tarball:
 
 - All `*.h` from `include/mbedtls/` to `thirdparty/mbedtls/include/mbedtls/`
 - All `*.c` from `library/` to `thirdparty/mbedtls/library/`
@@ -623,7 +638,11 @@ Patches in the `patches` directory should be re-applied after updates.
 ## wslay
 
 - Upstream: https://github.com/tatsuhiro-t/wslay
+<<<<<<< HEAD
 - Version: 1.1.0 (2018)
+=======
+- Version: 1.1.1 (2020)
+>>>>>>> amandotjain/pad_publishing
 - License: MIT
 
 File extracted from upstream release tarball:

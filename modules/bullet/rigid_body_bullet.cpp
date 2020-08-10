@@ -320,6 +320,7 @@ void RigidBodyBullet::set_space(SpaceBullet *p_space) {
 	// Clear the old space if there is one
 	if (space) {
 		can_integrate_forces = false;
+		isScratchedSpaceOverrideModificator = false;
 
 		// Remove all eventual constraints
 		assert_no_constraints();
@@ -904,6 +905,10 @@ void RigidBodyBullet::reload_space_override_modificator() {
 
 	bool stopped = false;
 	for (int i = areaWhereIamCount - 1; (0 <= i) && !stopped; --i) {
+<<<<<<< HEAD
+=======
+
+>>>>>>> amandotjain/pad_publishing
 		currentArea = areasWhereIam[i];
 
 		if (!currentArea || PhysicsServer3D::AREA_SPACE_OVERRIDE_DISABLED == currentArea->get_spOv_mode()) {
@@ -960,7 +965,11 @@ void RigidBodyBullet::reload_space_override_modificator() {
 				newAngularDamp += currentArea->get_spOv_angularDamp();
 				stopped = true;
 				break;
+<<<<<<< HEAD
 			case PhysicsServer3D::AREA_SPACE_OVERRIDE_REPLACE:
+=======
+			case PhysicsServer::AREA_SPACE_OVERRIDE_REPLACE:
+>>>>>>> amandotjain/pad_publishing
 				/// This area replaces any gravity/damp, even the default one, and
 				/// stops taking into account the rest of the areas.
 				newGravity = support_gravity;
@@ -968,7 +977,11 @@ void RigidBodyBullet::reload_space_override_modificator() {
 				newAngularDamp = currentArea->get_spOv_angularDamp();
 				stopped = true;
 				break;
+<<<<<<< HEAD
 			case PhysicsServer3D::AREA_SPACE_OVERRIDE_REPLACE_COMBINE:
+=======
+			case PhysicsServer::AREA_SPACE_OVERRIDE_REPLACE_COMBINE:
+>>>>>>> amandotjain/pad_publishing
 				/// This area replaces any gravity/damp calculated so far, but keeps
 				/// calculating the rest of the areas, down to the default one.
 				newGravity = support_gravity;

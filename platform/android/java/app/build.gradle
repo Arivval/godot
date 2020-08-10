@@ -11,6 +11,11 @@ buildscript {
     dependencies {
         classpath libraries.androidGradlePlugin
         classpath libraries.kotlinGradlePlugin
+<<<<<<< HEAD
+=======
+//CHUNK_BUILDSCRIPT_DEPENDENCIES_BEGIN
+//CHUNK_BUILDSCRIPT_DEPENDENCIES_END
+>>>>>>> amandotjain/pad_publishing
     }
 }
 
@@ -21,6 +26,11 @@ allprojects {
         mavenCentral()
         google()
         jcenter()
+<<<<<<< HEAD
+=======
+//CHUNK_ALLPROJECTS_REPOSITORIES_BEGIN
+//CHUNK_ALLPROJECTS_REPOSITORIES_END
+>>>>>>> amandotjain/pad_publishing
 
         // Godot user plugins custom maven repos
         String[] mavenRepos = getGodotPluginsMavenRepos()
@@ -63,6 +73,12 @@ dependencies {
     if (pluginsBinaries != null && pluginsBinaries.size() > 0) {
         implementation files(pluginsBinaries)
     }
+<<<<<<< HEAD
+=======
+
+//CHUNK_DEPENDENCIES_BEGIN
+//CHUNK_DEPENDENCIES_END
+>>>>>>> amandotjain/pad_publishing
 }
 
 android {
@@ -74,14 +90,30 @@ android {
         targetCompatibility 1.8
     }
 
+<<<<<<< HEAD
+=======
+//ASSET_PACK_INFO_START !!!DO NOT EDIT THIS LINE!!!
+//ASSET_PACK_INFO_END !!!DO NOT EDIT THIS LINE!!!
+
+>>>>>>> amandotjain/pad_publishing
     defaultConfig {
         // The default ignore pattern for the 'assets' directory includes hidden files and directories which are used by Godot projects.
         aaptOptions {
             ignoreAssetsPattern "!.svn:!.git:!.ds_store:!*.scc:<dir>_*:!CVS:!thumbs.db:!picasa.ini:!*~"
         }
 
+<<<<<<< HEAD
+=======
+        ndk {
+            String[] export_abi_list = getExportEnabledABIs()
+            abiFilters export_abi_list
+        }
+        
+>>>>>>> amandotjain/pad_publishing
         // Feel free to modify the application id to your own.
         applicationId getExportPackageName()
+        versionCode getExportVersionCode()
+        versionName getExportVersionName()
         minSdkVersion versions.minSdk
         targetSdkVersion versions.targetSdk
     }
@@ -108,6 +140,7 @@ android {
     sourceSets {
         main {
             manifest.srcFile 'AndroidManifest.xml'
+<<<<<<< HEAD
             java.srcDirs = ['src']
             res.srcDirs = ['res']
             aidl.srcDirs = ['aidl']
@@ -115,6 +148,39 @@ android {
         }
         debug.jniLibs.srcDirs = ['libs/debug']
         release.jniLibs.srcDirs = ['libs/release']
+=======
+            java.srcDirs = [
+                'src'
+//DIR_SRC_BEGIN
+//DIR_SRC_END
+            ]
+            res.srcDirs = [
+                'res'
+//DIR_RES_BEGIN
+//DIR_RES_END
+            ]
+            aidl.srcDirs = [
+                'aidl'
+//DIR_AIDL_BEGIN
+//DIR_AIDL_END
+            ]
+            assets.srcDirs = [
+                'assets'
+//DIR_ASSETS_BEGIN
+//DIR_ASSETS_END
+            ]
+        }
+        debug.jniLibs.srcDirs = [
+            'libs/debug'
+//DIR_JNI_DEBUG_BEGIN
+//DIR_JNI_DEBUG_END
+        ]
+        release.jniLibs.srcDirs = [
+            'libs/release'
+//DIR_JNI_RELEASE_BEGIN
+//DIR_JNI_RELEASE_END
+        ]
+>>>>>>> amandotjain/pad_publishing
     }
 
     applicationVariants.all { variant ->
@@ -123,3 +189,33 @@ android {
         }
     }
 }
+<<<<<<< HEAD
+=======
+
+task copyAndRenameDebugApk(type: Copy) {
+    from "$buildDir/outputs/apk/debug/android_debug.apk"
+    into getExportPath()
+    rename "android_debug.apk", getExportFilename()
+}
+
+task copyAndRenameReleaseApk(type: Copy) {
+    from "$buildDir/outputs/apk/release/android_release.apk"
+    into getExportPath()
+    rename "android_release.apk", getExportFilename()
+}
+
+task copyAndRenameDebugAab(type: Copy) {
+    from "$buildDir/outputs/bundle/debug/build-debug.aab"
+    into getExportPath()
+    rename "build-debug.aab", getExportFilename()
+}
+
+task copyAndRenameReleaseAab(type: Copy) {
+    from "$buildDir/outputs/bundle/release/build-release.aab"
+    into getExportPath()
+    rename "build-release.aab", getExportFilename()
+}
+
+//CHUNK_GLOBAL_BEGIN
+//CHUNK_GLOBAL_END
+>>>>>>> amandotjain/pad_publishing

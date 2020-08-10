@@ -30,6 +30,7 @@
 
 #include "image.h"
 
+#include "core/error_macros.h"
 #include "core/hash_map.h"
 #include "core/io/image_loader.h"
 #include "core/io/resource_loader.h"
@@ -85,7 +86,13 @@ const char *Image::format_names[Image::FORMAT_MAX] = {
 SavePNGFunc Image::save_png_func = nullptr;
 SaveEXRFunc Image::save_exr_func = nullptr;
 
+<<<<<<< HEAD
 SavePNGBufferFunc Image::save_png_buffer_func = nullptr;
+=======
+SavePNGBufferFunc Image::save_png_buffer_func = NULL;
+
+void Image::_put_pixelb(int p_x, int p_y, uint32_t p_pixelsize, uint8_t *p_data, const uint8_t *p_pixel) {
+>>>>>>> amandotjain/pad_publishing
 
 void Image::_put_pixelb(int p_x, int p_y, uint32_t p_pixelsize, uint8_t *p_data, const uint8_t *p_pixel) {
 	uint32_t ofs = (p_y * width + p_x) * p_pixelsize;
@@ -1565,7 +1572,11 @@ void Image::normalize() {
 Error Image::generate_mipmaps(bool p_renormalize) {
 	ERR_FAIL_COND_V_MSG(!_can_modify(format), ERR_UNAVAILABLE, "Cannot generate mipmaps in compressed or custom image formats.");
 
+<<<<<<< HEAD
 	ERR_FAIL_COND_V_MSG(format == FORMAT_RGBA4444, ERR_UNAVAILABLE, "Cannot generate mipmaps from RGBA4444 format.");
+=======
+	ERR_FAIL_COND_V_MSG(format == FORMAT_RGBA4444 || format == FORMAT_RGBA5551, ERR_UNAVAILABLE, "Cannot generate mipmaps in custom image formats.");
+>>>>>>> amandotjain/pad_publishing
 
 	ERR_FAIL_COND_V_MSG(width == 0 || height == 0, ERR_UNCONFIGURED, "Cannot generate mipmaps with width or height equal to 0.");
 
@@ -1894,9 +1905,16 @@ Vector<uint8_t> Image::get_data() const {
 }
 
 void Image::create(int p_width, int p_height, bool p_use_mipmaps, Format p_format) {
+<<<<<<< HEAD
 	ERR_FAIL_INDEX(p_width - 1, MAX_WIDTH);
 	ERR_FAIL_INDEX(p_height - 1, MAX_HEIGHT);
 	ERR_FAIL_COND_MSG(p_width * p_height > MAX_PIXELS, "Too many pixels for image, maximum is " + itos(MAX_PIXELS));
+=======
+	ERR_FAIL_COND_MSG(p_width <= 0, "Image width must be greater than 0.");
+	ERR_FAIL_COND_MSG(p_height <= 0, "Image height must be greater than 0.");
+	ERR_FAIL_COND_MSG(p_width > MAX_WIDTH, "Image width cannot be greater than " + itos(MAX_WIDTH) + ".");
+	ERR_FAIL_COND_MSG(p_height > MAX_HEIGHT, "Image height cannot be greater than " + itos(MAX_HEIGHT) + ".");
+>>>>>>> amandotjain/pad_publishing
 
 	int mm = 0;
 	int size = _get_dst_image_size(p_width, p_height, p_format, mm, p_use_mipmaps ? -1 : 0);
@@ -1913,10 +1931,18 @@ void Image::create(int p_width, int p_height, bool p_use_mipmaps, Format p_forma
 	format = p_format;
 }
 
+<<<<<<< HEAD
 void Image::create(int p_width, int p_height, bool p_use_mipmaps, Format p_format, const Vector<uint8_t> &p_data) {
 	ERR_FAIL_INDEX(p_width - 1, MAX_WIDTH);
 	ERR_FAIL_INDEX(p_height - 1, MAX_HEIGHT);
 	ERR_FAIL_COND_MSG(p_width * p_height > MAX_PIXELS, "Too many pixels for image, maximum is " + itos(MAX_PIXELS));
+=======
+void Image::create(int p_width, int p_height, bool p_use_mipmaps, Format p_format, const PoolVector<uint8_t> &p_data) {
+	ERR_FAIL_COND_MSG(p_width <= 0, "Image width must be greater than 0.");
+	ERR_FAIL_COND_MSG(p_height <= 0, "Image height must be greater than 0.");
+	ERR_FAIL_COND_MSG(p_width > MAX_WIDTH, "Image width cannot be greater than " + itos(MAX_WIDTH) + ".");
+	ERR_FAIL_COND_MSG(p_height > MAX_HEIGHT, "Image height cannot be greater than " + itos(MAX_HEIGHT) + ".");
+>>>>>>> amandotjain/pad_publishing
 
 	int mm;
 	int size = _get_dst_image_size(p_width, p_height, p_format, mm, p_use_mipmaps ? -1 : 0);
@@ -2214,10 +2240,22 @@ Error Image::save_png(const String &p_path) const {
 	return save_png_func(p_path, Ref<Image>((Image *)this));
 }
 
+<<<<<<< HEAD
 Vector<uint8_t> Image::save_png_to_buffer() const {
 	if (save_png_buffer_func == nullptr) {
 		return Vector<uint8_t>();
 	}
+=======
+PoolVector<uint8_t> Image::save_png_to_buffer() const {
+	if (save_png_buffer_func == NULL) {
+		return PoolVector<uint8_t>();
+	}
+
+	return save_png_buffer_func(Ref<Image>((Image *)this));
+}
+
+Error Image::save_exr(const String &p_path, bool p_grayscale) const {
+>>>>>>> amandotjain/pad_publishing
 
 	return save_png_buffer_func(Ref<Image>((Image *)this));
 }
@@ -2626,9 +2664,16 @@ void Image::fill(const Color &c) {
 	}
 }
 
+<<<<<<< HEAD
 ImageMemLoadFunc Image::_png_mem_loader_func = nullptr;
 ImageMemLoadFunc Image::_jpg_mem_loader_func = nullptr;
 ImageMemLoadFunc Image::_webp_mem_loader_func = nullptr;
+=======
+ImageMemLoadFunc Image::_png_mem_loader_func = NULL;
+ImageMemLoadFunc Image::_jpg_mem_loader_func = NULL;
+ImageMemLoadFunc Image::_webp_mem_loader_func = NULL;
+ImageMemLoadFunc Image::_tga_mem_loader_func = NULL;
+>>>>>>> amandotjain/pad_publishing
 
 void (*Image::_image_compress_bc_func)(Image *, float, Image::UsedChannels) = nullptr;
 void (*Image::_image_compress_bptc_func)(Image *, float, Image::UsedChannels) = nullptr;
@@ -3058,6 +3103,7 @@ void Image::_bind_methods() {
 	ClassDB::bind_method(D_METHOD("load_png_from_buffer", "buffer"), &Image::load_png_from_buffer);
 	ClassDB::bind_method(D_METHOD("load_jpg_from_buffer", "buffer"), &Image::load_jpg_from_buffer);
 	ClassDB::bind_method(D_METHOD("load_webp_from_buffer", "buffer"), &Image::load_webp_from_buffer);
+	ClassDB::bind_method(D_METHOD("load_tga_from_buffer", "buffer"), &Image::load_tga_from_buffer);
 
 	ADD_PROPERTY(PropertyInfo(Variant::DICTIONARY, "data", PROPERTY_HINT_NONE, "", PROPERTY_USAGE_STORAGE), "_set_data", "_get_data");
 
@@ -3389,6 +3435,7 @@ Error Image::load_webp_from_buffer(const Vector<uint8_t> &p_array) {
 	return _load_from_buffer(p_array, _webp_mem_loader_func);
 }
 
+<<<<<<< HEAD
 void Image::convert_rg_to_ra_rgba8() {
 	ERR_FAIL_COND(format != FORMAT_RGBA8);
 	ERR_FAIL_COND(!data.size());
@@ -3416,6 +3463,14 @@ void Image::convert_ra_rgba8_to_rg() {
 }
 
 Error Image::_load_from_buffer(const Vector<uint8_t> &p_array, ImageMemLoadFunc p_loader) {
+=======
+Error Image::load_tga_from_buffer(const PoolVector<uint8_t> &p_array) {
+	ERR_FAIL_NULL_V_MSG(_tga_mem_loader_func, ERR_UNAVAILABLE, "TGA module was not installed.");
+	return _load_from_buffer(p_array, _tga_mem_loader_func);
+}
+
+Error Image::_load_from_buffer(const PoolVector<uint8_t> &p_array, ImageMemLoadFunc p_loader) {
+>>>>>>> amandotjain/pad_publishing
 	int buffer_size = p_array.size();
 
 	ERR_FAIL_COND_V(buffer_size == 0, ERR_INVALID_PARAMETER);

@@ -5,8 +5,13 @@
 /*                           GODOT ENGINE                                */
 /*                      https://godotengine.org                          */
 /*************************************************************************/
+<<<<<<< HEAD
 /* Copyright (c) 2007-2020 Juan Linietsky, Ariel Manzur.                 */
 /* Copyright (c) 2014-2020 Godot Engine contributors (cf. AUTHORS.md).   */
+=======
+/* Copyright (c) 2007-2019 Juan Linietsky, Ariel Manzur.                 */
+/* Copyright (c) 2014-2019 Godot Engine contributors (cf. AUTHORS.md)    */
+>>>>>>> amandotjain/pad_publishing
 /*                                                                       */
 /* Permission is hereby granted, free of charge, to any person obtaining */
 /* a copy of this software and associated documentation files (the       */
@@ -37,7 +42,10 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+<<<<<<< HEAD
 import android.view.Surface;
+=======
+>>>>>>> amandotjain/pad_publishing
 import android.view.View;
 
 import androidx.annotation.NonNull;
@@ -77,6 +85,10 @@ import javax.microedition.khronos.opengles.GL10;
  * 'godot/plugin/v1/[PluginName]/'
  */
 public abstract class GodotPlugin {
+<<<<<<< HEAD
+=======
+
+>>>>>>> amandotjain/pad_publishing
 	private static final String TAG = GodotPlugin.class.getSimpleName();
 
 	private final Godot godot;
@@ -98,7 +110,11 @@ public abstract class GodotPlugin {
 	 */
 	@Nullable
 	protected Activity getActivity() {
+<<<<<<< HEAD
 		return godot.getActivity();
+=======
+		return godot;
+>>>>>>> amandotjain/pad_publishing
 	}
 
 	/**
@@ -107,7 +123,11 @@ public abstract class GodotPlugin {
 	 * This method is invoked on the render thread.
 	 */
 	public final void onRegisterPluginWithGodotNative() {
+<<<<<<< HEAD
 		nativeRegisterSingleton(getPluginName());
+=======
+		nativeRegisterSingleton(getPluginName(), this);
+>>>>>>> amandotjain/pad_publishing
 
 		Class clazz = getClass();
 		Method[] methods = clazz.getDeclaredMethods();
@@ -219,6 +239,7 @@ public abstract class GodotPlugin {
 	public void onGLSurfaceCreated(GL10 gl, EGLConfig config) {}
 
 	/**
+<<<<<<< HEAD
 	 * Invoked once per frame on the Vulkan thread after the frame is drawn.
 	 */
 	public void onVkDrawFrame() {}
@@ -235,6 +256,8 @@ public abstract class GodotPlugin {
 	public void onVkSurfaceCreated(Surface surface) {}
 
 	/**
+=======
+>>>>>>> amandotjain/pad_publishing
 	 * Returns the name of the plugin.
 	 * <p>
 	 * This value must match the one listed in the plugin '<meta-data>' manifest entry.
@@ -335,7 +358,11 @@ public abstract class GodotPlugin {
 	 * Used to setup a {@link GodotPlugin} instance.
 	 * @param p_name Name of the instance.
 	 */
+<<<<<<< HEAD
 	private native void nativeRegisterSingleton(String p_name);
+=======
+	public static native void nativeRegisterSingleton(String p_name, Object object);
+>>>>>>> amandotjain/pad_publishing
 
 	/**
 	 * Used to complete registration of the {@link GodotPlugin} instance's methods.
@@ -344,7 +371,11 @@ public abstract class GodotPlugin {
 	 * @param p_ret Return type of the registered method
 	 * @param p_params Method parameters types
 	 */
+<<<<<<< HEAD
 	private native void nativeRegisterMethod(String p_sname, String p_name, String p_ret, String[] p_params);
+=======
+	public static native void nativeRegisterMethod(String p_sname, String p_name, String p_ret, String[] p_params);
+>>>>>>> amandotjain/pad_publishing
 
 	/**
 	 * Used to register gdnative libraries bundled by the plugin.

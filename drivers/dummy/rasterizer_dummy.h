@@ -349,6 +349,10 @@ public:
 	RID shader_get_default_texture_param(RID p_shader, const StringName &p_name) const { return RID(); }
 	virtual Variant shader_get_param_default(RID p_material, const StringName &p_param) const { return Variant(); }
 
+	void shader_add_custom_define(RID p_shader, const String &p_define) {}
+	void shader_get_custom_defines(RID p_shader, Vector<String> *p_defines) const {}
+	void shader_clear_custom_defines(RID p_shader) {}
+
 	/* COMMON MATERIAL API */
 
 	RID material_create() { return RID(); }
@@ -860,14 +864,29 @@ public:
 			DummyTexture *texture = texture_owner.getornull(p_rid);
 			texture_owner.free(p_rid);
 			memdelete(texture);
+		} else if (mesh_owner.owns(p_rid)) {
+			// delete the mesh
+			DummyMesh *mesh = mesh_owner.getornull(p_rid);
+			mesh_owner.free(p_rid);
+			memdelete(mesh);
+		} else if (lightmap_capture_data_owner.owns(p_rid)) {
+			// delete the lightmap
+			LightmapCapture *lightmap_capture = lightmap_capture_data_owner.getornull(p_rid);
+			lightmap_capture_data_owner.free(p_rid);
+			memdelete(lightmap_capture);
+		} else {
+			return false;
 		}
 
+<<<<<<< HEAD
 		if (mesh_owner.owns(p_rid)) {
 			// delete the mesh
 			DummyMesh *mesh = mesh_owner.getornull(p_rid);
 			mesh_owner.free(p_rid);
 			memdelete(mesh);
 		}
+=======
+>>>>>>> amandotjain/pad_publishing
 		return true;
 	}
 
@@ -944,6 +963,7 @@ public:
 	RasterizerScene *get_scene() { return &scene; }
 
 	void set_boot_image(const Ref<Image> &p_image, const Color &p_color, bool p_scale, bool p_use_filter = true) {}
+	void set_shader_time_scale(float p_scale) {}
 
 	void initialize() {}
 	void begin_frame(double frame_step) {

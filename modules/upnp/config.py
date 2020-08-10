@@ -7,10 +7,15 @@ def configure(env):
 
 
 def get_doc_classes():
+<<<<<<< HEAD
     return [
         "UPNP",
         "UPNPDevice",
     ]
+=======
+    return ["UPNP", "UPNPDevice"]
+
+>>>>>>> amandotjain/pad_publishing
 
 
 def get_doc_path():

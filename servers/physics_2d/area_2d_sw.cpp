@@ -213,9 +213,17 @@ void Area2DSW::call_queries() {
 			return;
 		}
 
+<<<<<<< HEAD
 		for (Map<BodyKey, BodyState>::Element *E = monitored_bodies.front(); E; E = E->next()) {
 			if (E->get().state == 0) {
 				continue; //nothing happened
+=======
+		for (Map<BodyKey, BodyState>::Element *E = monitored_bodies.front(); E;) {
+
+			if (E->get().state == 0) { // Nothing happened
+				E = E->next();
+				continue;
+>>>>>>> amandotjain/pad_publishing
 			}
 
 			res[0] = E->get().state > 0 ? PhysicsServer2D::AREA_BODY_ADDED : PhysicsServer2D::AREA_BODY_REMOVED;
@@ -224,14 +232,27 @@ void Area2DSW::call_queries() {
 			res[3] = E->key().body_shape;
 			res[4] = E->key().area_shape;
 
+<<<<<<< HEAD
 			Callable::CallError ce;
+=======
+			Map<BodyKey, BodyState>::Element *next = E->next();
+			monitored_bodies.erase(E);
+			E = next;
+
+			Variant::CallError ce;
+>>>>>>> amandotjain/pad_publishing
 			obj->call(monitor_callback_method, (const Variant **)resptr, 5, ce);
 		}
 	}
 
+<<<<<<< HEAD
 	monitored_bodies.clear();
 
 	if (area_monitor_callback_id.is_valid() && !monitored_areas.empty()) {
+=======
+	if (area_monitor_callback_id && !monitored_areas.empty()) {
+
+>>>>>>> amandotjain/pad_publishing
 		Variant res[5];
 		Variant *resptr[5];
 		for (int i = 0; i < 5; i++) {
@@ -245,9 +266,17 @@ void Area2DSW::call_queries() {
 			return;
 		}
 
+<<<<<<< HEAD
 		for (Map<BodyKey, BodyState>::Element *E = monitored_areas.front(); E; E = E->next()) {
 			if (E->get().state == 0) {
 				continue; //nothing happened
+=======
+		for (Map<BodyKey, BodyState>::Element *E = monitored_areas.front(); E;) {
+
+			if (E->get().state == 0) { // Nothing happened
+				E = E->next();
+				continue;
+>>>>>>> amandotjain/pad_publishing
 			}
 
 			res[0] = E->get().state > 0 ? PhysicsServer2D::AREA_BODY_ADDED : PhysicsServer2D::AREA_BODY_REMOVED;
@@ -256,14 +285,18 @@ void Area2DSW::call_queries() {
 			res[3] = E->key().body_shape;
 			res[4] = E->key().area_shape;
 
+<<<<<<< HEAD
 			Callable::CallError ce;
+=======
+			Map<BodyKey, BodyState>::Element *next = E->next();
+			monitored_areas.erase(E);
+			E = next;
+
+			Variant::CallError ce;
+>>>>>>> amandotjain/pad_publishing
 			obj->call(area_monitor_callback_method, (const Variant **)resptr, 5, ce);
 		}
 	}
-
-	monitored_areas.clear();
-
-	//get_space()->area_remove_from_monitor_query_list(&monitor_query_list);
 }
 
 Area2DSW::Area2DSW() :

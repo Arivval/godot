@@ -293,6 +293,10 @@ private:
 
 public:
 	struct CallState {
+<<<<<<< HEAD
+=======
+
+>>>>>>> amandotjain/pad_publishing
 		GDScript *script;
 		GDScriptInstance *instance;
 #ifdef DEBUG_ENABLED

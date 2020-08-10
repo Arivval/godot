@@ -1556,7 +1556,17 @@ void BulletPhysicsServer3D::step(float p_deltaTime) {
 void BulletPhysicsServer3D::sync() {
 }
 
+<<<<<<< HEAD
 void BulletPhysicsServer3D::flush_queries() {
+=======
+void BulletPhysicsServer::flush_queries() {
+	if (!active)
+		return;
+
+	for (int i = 0; i < active_spaces_count; ++i) {
+		active_spaces[i]->flush_queries();
+	}
+>>>>>>> amandotjain/pad_publishing
 }
 
 void BulletPhysicsServer3D::finish() {

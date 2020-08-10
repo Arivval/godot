@@ -26,11 +26,14 @@ def get_opts():
     return [
         ("osxcross_sdk", "OSXCross SDK version", "darwin14"),
         ("MACOS_SDK_PATH", "Path to the macOS SDK", ""),
+<<<<<<< HEAD
         BoolVariable(
             "use_static_mvk",
             "Link MoltenVK statically as Level-0 driver (better portability) or use Vulkan ICD loader (enables validation layers)",
             False,
         ),
+=======
+>>>>>>> amandotjain/pad_publishing
         EnumVariable("debug_symbols", "Add debugging symbols to release builds", "yes", ("yes", "no", "full")),
         BoolVariable("separate_debug_symbols", "Create a separate file containing debugging symbols", False),
         BoolVariable("use_ubsan", "Use LLVM/GCC compiler undefined behavior sanitizer (UBSAN)", False),
@@ -87,8 +90,20 @@ def configure(env):
         env["osxcross"] = True
 
     if not "osxcross" in env:  # regular native build
+<<<<<<< HEAD
         env.Append(CCFLAGS=["-arch", "x86_64"])
         env.Append(LINKFLAGS=["-arch", "x86_64"])
+=======
+        if env["arch"] == "arm64":
+            print("Building for macOS 10.15+, platform arm64.")
+            env.Append(CCFLAGS=["-arch", "arm64", "-mmacosx-version-min=10.15", "-target", "arm64-apple-macos10.15"])
+            env.Append(LINKFLAGS=["-arch", "arm64", "-mmacosx-version-min=10.15", "-target", "arm64-apple-macos10.15"])
+        else:
+            print("Building for macOS 10.9+, platform x86-64.")
+            env.Append(CCFLAGS=["-arch", "x86_64", "-mmacosx-version-min=10.9"])
+            env.Append(LINKFLAGS=["-arch", "x86_64", "-mmacosx-version-min=10.9"])
+
+>>>>>>> amandotjain/pad_publishing
         if env["macports_clang"] != "no":
             mpprefix = os.environ.get("MACPORTS_PREFIX", "/opt/local")
             mpclangver = env["macports_clang"]
@@ -148,12 +163,31 @@ def configure(env):
     ## Dependencies
 
     if env["builtin_libtheora"]:
+<<<<<<< HEAD
         env["x86_libtheora_opt_gcc"] = True
+=======
+        if env["arch"] != "arm64":
+            env["x86_libtheora_opt_gcc"] = True
+>>>>>>> amandotjain/pad_publishing
 
     ## Flags
 
     env.Prepend(CPPPATH=["#platform/osx"])
+<<<<<<< HEAD
     env.Append(CPPDEFINES=["OSX_ENABLED", "UNIX_ENABLED", "APPLE_STYLE_KEYS", "COREAUDIO_ENABLED", "COREMIDI_ENABLED"])
+=======
+    env.Append(
+        CPPDEFINES=[
+            "OSX_ENABLED",
+            "UNIX_ENABLED",
+            "GLES_ENABLED",
+            "APPLE_STYLE_KEYS",
+            "COREAUDIO_ENABLED",
+            "COREMIDI_ENABLED",
+            "GL_SILENCE_DEPRECATION",
+        ]
+    )
+>>>>>>> amandotjain/pad_publishing
     env.Append(
         LINKFLAGS=[
             "-framework",
@@ -161,16 +195,28 @@ def configure(env):
             "-framework",
             "Carbon",
             "-framework",
+<<<<<<< HEAD
+=======
+            "OpenGL",
+            "-framework",
+            "AGL",
+            "-framework",
+>>>>>>> amandotjain/pad_publishing
             "AudioUnit",
             "-framework",
             "CoreAudio",
             "-framework",
             "CoreMIDI",
+<<<<<<< HEAD
+=======
+            "-lz",
+>>>>>>> amandotjain/pad_publishing
             "-framework",
             "IOKit",
             "-framework",
             "ForceFeedback",
             "-framework",
+<<<<<<< HEAD
             "CoreVideo",
             "-framework",
             "AVFoundation",
@@ -192,3 +238,13 @@ def configure(env):
 
     env.Append(CCFLAGS=["-mmacosx-version-min=10.12"])
     env.Append(LINKFLAGS=["-mmacosx-version-min=10.12"])
+=======
+            "AVFoundation",
+            "-framework",
+            "CoreMedia",
+            "-framework",
+            "CoreVideo",
+        ]
+    )
+    env.Append(LIBS=["pthread"])
+>>>>>>> amandotjain/pad_publishing

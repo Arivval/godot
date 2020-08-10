@@ -373,6 +373,7 @@ Error ProjectSettings::_setup(const String &p_path, const String &p_main_pack, b
 			// Try to load data pack at the location of the executable.
 			// As mentioned above, we have two potential names to attempt.
 			found = _load_resource_pack(exec_dir.plus_file(exec_basename + ".pck")) || _load_resource_pack(exec_dir.plus_file(exec_filename + ".pck"));
+<<<<<<< HEAD
 		}
 
 		if (!found) {
@@ -381,6 +382,16 @@ Error ProjectSettings::_setup(const String &p_path, const String &p_main_pack, b
 			found = _load_resource_pack(exec_basename + ".pck") || _load_resource_pack(exec_filename + ".pck");
 		}
 
+=======
+		}
+
+		if (!found) {
+			// If we couldn't find them next to the executable, we attempt
+			// the current working directory. Same story, two tests.
+			found = _load_resource_pack(exec_basename + ".pck") || _load_resource_pack(exec_filename + ".pck");
+		}
+
+>>>>>>> amandotjain/pad_publishing
 		// If we opened our package, try and load our project.
 		if (found) {
 			Error err = _load_settings_text_or_binary("res://project.godot", "res://project.binary");
@@ -469,6 +480,14 @@ Error ProjectSettings::setup(const String &p_path, const String &p_main_pack, bo
 			_load_settings_text(custom_settings);
 		}
 	}
+	// Using GLOBAL_GET on every block for compressing can be slow, so assigning here.
+	Compression::zstd_long_distance_matching = GLOBAL_GET("compression/formats/zstd/long_distance_matching");
+	Compression::zstd_level = GLOBAL_GET("compression/formats/zstd/compression_level");
+	Compression::zstd_window_log_size = GLOBAL_GET("compression/formats/zstd/window_log_size");
+
+	Compression::zlib_level = GLOBAL_GET("compression/formats/zlib/compression_level");
+
+	Compression::gzip_level = GLOBAL_GET("compression/formats/gzip/compression_level");
 
 	return err;
 }
@@ -965,6 +984,12 @@ void ProjectSettings::_bind_methods() {
 }
 
 ProjectSettings::ProjectSettings() {
+<<<<<<< HEAD
+=======
+	// Initialization of engine variables should be done in the setup() method,
+	// so that the values can be overridden from project.godot or project.binary.
+
+>>>>>>> amandotjain/pad_publishing
 	singleton = this;
 
 	Array events;
@@ -1164,18 +1189,17 @@ ProjectSettings::ProjectSettings() {
 	GLOBAL_DEF("debug/settings/profiler/max_functions", 16384);
 	custom_prop_info["debug/settings/profiler/max_functions"] = PropertyInfo(Variant::INT, "debug/settings/profiler/max_functions", PROPERTY_HINT_RANGE, "128,65535,1");
 
-	//assigning here, because using GLOBAL_GET on every block for compressing can be slow
-	Compression::zstd_long_distance_matching = GLOBAL_DEF("compression/formats/zstd/long_distance_matching", false);
+	GLOBAL_DEF("compression/formats/zstd/long_distance_matching", Compression::zstd_long_distance_matching);
 	custom_prop_info["compression/formats/zstd/long_distance_matching"] = PropertyInfo(Variant::BOOL, "compression/formats/zstd/long_distance_matching");
-	Compression::zstd_level = GLOBAL_DEF("compression/formats/zstd/compression_level", 3);
+	GLOBAL_DEF("compression/formats/zstd/compression_level", Compression::zstd_level);
 	custom_prop_info["compression/formats/zstd/compression_level"] = PropertyInfo(Variant::INT, "compression/formats/zstd/compression_level", PROPERTY_HINT_RANGE, "1,22,1");
-	Compression::zstd_window_log_size = GLOBAL_DEF("compression/formats/zstd/window_log_size", 27);
+	GLOBAL_DEF("compression/formats/zstd/window_log_size", Compression::zstd_window_log_size);
 	custom_prop_info["compression/formats/zstd/window_log_size"] = PropertyInfo(Variant::INT, "compression/formats/zstd/window_log_size", PROPERTY_HINT_RANGE, "10,30,1");
 
-	Compression::zlib_level = GLOBAL_DEF("compression/formats/zlib/compression_level", Z_DEFAULT_COMPRESSION);
+	GLOBAL_DEF("compression/formats/zlib/compression_level", Compression::zlib_level);
 	custom_prop_info["compression/formats/zlib/compression_level"] = PropertyInfo(Variant::INT, "compression/formats/zlib/compression_level", PROPERTY_HINT_RANGE, "-1,9,1");
 
-	Compression::gzip_level = GLOBAL_DEF("compression/formats/gzip/compression_level", Z_DEFAULT_COMPRESSION);
+	GLOBAL_DEF("compression/formats/gzip/compression_level", Compression::gzip_level);
 	custom_prop_info["compression/formats/gzip/compression_level"] = PropertyInfo(Variant::INT, "compression/formats/gzip/compression_level", PROPERTY_HINT_RANGE, "-1,9,1");
 }
 

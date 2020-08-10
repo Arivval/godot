@@ -597,6 +597,7 @@ Error EditorExportPlatformOSX::export_project(const Ref<EditorExportPreset> &p_p
 	if (err == OK) {
 		print_line("Creating " + tmp_app_path_name + "/Contents/Frameworks");
 		err = tmp_app_path->make_dir_recursive(tmp_app_path_name + "/Contents/Frameworks");
+<<<<<<< HEAD
 	}
 
 	if (err == OK) {
@@ -604,6 +605,15 @@ Error EditorExportPlatformOSX::export_project(const Ref<EditorExportPreset> &p_p
 		err = tmp_app_path->make_dir_recursive(tmp_app_path_name + "/Contents/Resources");
 	}
 
+=======
+	}
+
+	if (err == OK) {
+		print_line("Creating " + tmp_app_path_name + "/Contents/Resources");
+		err = tmp_app_path->make_dir_recursive(tmp_app_path_name + "/Contents/Resources");
+	}
+
+>>>>>>> amandotjain/pad_publishing
 	// Now process our template.
 	bool found_binary = false;
 	int total_size = 0;
@@ -777,6 +787,7 @@ Error EditorExportPlatformOSX::export_project(const Ref<EditorExportPreset> &p_p
 				if (FileAccess::exists(p_path)) {
 					OS::get_singleton()->move_to_trash(p_path);
 				}
+<<<<<<< HEAD
 
 				FileAccess *dst_f = nullptr;
 				zlib_filefunc_def io_dst = zipio_create_io_from_file(&dst_f);
@@ -794,6 +805,17 @@ Error EditorExportPlatformOSX::export_project(const Ref<EditorExportPreset> &p_p
 				return ERR_SKIP;
 			}
 			err = _notarize(p_preset, p_path);
+=======
+
+				FileAccess *dst_f = nullptr;
+				zlib_filefunc_def io_dst = zipio_create_io_from_file(&dst_f);
+				zipFile zip = zipOpen2(p_path.utf8().get_data(), APPEND_STATUS_CREATE, nullptr, &io_dst);
+
+				_zip_folder_recursive(zip, EditorSettings::get_singleton()->get_cache_dir(), pkg_name + ".app", pkg_name);
+
+				zipClose(zip, nullptr);
+			}
+>>>>>>> amandotjain/pad_publishing
 		}
 
 		// Clean up temporary .app dir.
@@ -825,14 +847,23 @@ void EditorExportPlatformOSX::_zip_folder_recursive(zipFile &p_zip, const String
 			zipfi.tmz_date.tm_hour = time.hour;
 			zipfi.tmz_date.tm_mday = date.day;
 			zipfi.tmz_date.tm_min = time.min;
+<<<<<<< HEAD
 			zipfi.tmz_date.tm_mon = date.month;
+=======
+			zipfi.tmz_date.tm_mon = date.month - 1; // Note: "tm" month range - 0..11, Godot month range - 1..12, http://www.cplusplus.com/reference/ctime/tm/
+>>>>>>> amandotjain/pad_publishing
 			zipfi.tmz_date.tm_sec = time.sec;
 			zipfi.tmz_date.tm_year = date.year;
 			zipfi.dosDate = 0;
 			// 0100000: regular file type
 			// 0000755: permissions rwxr-xr-x
 			// 0000644: permissions rw-r--r--
+<<<<<<< HEAD
 			zipfi.external_fa = (is_executable ? 0100755 : 0100644) << 16L;
+=======
+			uint32_t _mode = (is_executable ? 0100755 : 0100644);
+			zipfi.external_fa = (_mode << 16L) | !(_mode & 0200);
+>>>>>>> amandotjain/pad_publishing
 			zipfi.internal_fa = 0;
 
 			zipOpenNewFileInZip4(p_zip,
@@ -862,6 +893,11 @@ void EditorExportPlatformOSX::_zip_folder_recursive(zipFile &p_zip, const String
 	da->list_dir_end();
 	memdelete(da);
 }
+<<<<<<< HEAD
+=======
+
+bool EditorExportPlatformOSX::can_export(const Ref<EditorExportPreset> &p_preset, String &r_error, bool &r_missing_templates) const {
+>>>>>>> amandotjain/pad_publishing
 
 bool EditorExportPlatformOSX::can_export(const Ref<EditorExportPreset> &p_preset, String &r_error, bool &r_missing_templates) const {
 	String err;

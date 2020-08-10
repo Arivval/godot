@@ -122,7 +122,11 @@ int BulletPhysicsDirectSpaceState::intersect_shape(const RID &p_shape, const Tra
 		return 0;
 	}
 
+<<<<<<< HEAD
 	ShapeBullet *shape = space->get_physics_server()->get_shape_owner()->getornull(p_shape);
+=======
+	ShapeBullet *shape = space->get_physics_server()->get_shape_owner()->get(p_shape);
+>>>>>>> amandotjain/pad_publishing
 	ERR_FAIL_COND_V(!shape, 0);
 
 	btCollisionShape *btShape = shape->create_bt_shape(p_xform.basis.get_scale_abs(), p_margin);
@@ -153,6 +157,7 @@ int BulletPhysicsDirectSpaceState::intersect_shape(const RID &p_shape, const Tra
 }
 
 bool BulletPhysicsDirectSpaceState::cast_motion(const RID &p_shape, const Transform &p_xform, const Vector3 &p_motion, float p_margin, float &r_closest_safe, float &r_closest_unsafe, const Set<RID> &p_exclude, uint32_t p_collision_mask, bool p_collide_with_bodies, bool p_collide_with_areas, ShapeRestInfo *r_info) {
+<<<<<<< HEAD
 	r_closest_safe = 0.0f;
 	r_closest_unsafe = 0.0f;
 	btVector3 bt_motion;
@@ -163,6 +168,19 @@ bool BulletPhysicsDirectSpaceState::cast_motion(const RID &p_shape, const Transf
 	}
 
 	ShapeBullet *shape = space->get_physics_server()->get_shape_owner()->getornull(p_shape);
+=======
+
+	r_closest_safe = 0.0f;
+	r_closest_unsafe = 0.0f;
+
+	btVector3 bt_motion;
+	G_TO_B(p_motion, bt_motion);
+
+	if (bt_motion.fuzzyZero())
+		return false;
+
+	ShapeBullet *shape = space->get_physics_server()->get_shape_owner()->get(p_shape);
+>>>>>>> amandotjain/pad_publishing
 	ERR_FAIL_COND_V(!shape, false);
 
 	btCollisionShape *btShape = shape->create_bt_shape(p_xform.basis.get_scale(), p_margin);
@@ -216,7 +234,11 @@ bool BulletPhysicsDirectSpaceState::collide_shape(RID p_shape, const Transform &
 		return false;
 	}
 
+<<<<<<< HEAD
 	ShapeBullet *shape = space->get_physics_server()->get_shape_owner()->getornull(p_shape);
+=======
+	ShapeBullet *shape = space->get_physics_server()->get_shape_owner()->get(p_shape);
+>>>>>>> amandotjain/pad_publishing
 	ERR_FAIL_COND_V(!shape, false);
 
 	btCollisionShape *btShape = shape->create_bt_shape(p_shape_xform.basis.get_scale_abs(), p_margin);
@@ -248,7 +270,12 @@ bool BulletPhysicsDirectSpaceState::collide_shape(RID p_shape, const Transform &
 }
 
 bool BulletPhysicsDirectSpaceState::rest_info(RID p_shape, const Transform &p_shape_xform, float p_margin, ShapeRestInfo *r_info, const Set<RID> &p_exclude, uint32_t p_collision_mask, bool p_collide_with_bodies, bool p_collide_with_areas) {
+<<<<<<< HEAD
 	ShapeBullet *shape = space->get_physics_server()->get_shape_owner()->getornull(p_shape);
+=======
+
+	ShapeBullet *shape = space->get_physics_server()->get_shape_owner()->get(p_shape);
+>>>>>>> amandotjain/pad_publishing
 	ERR_FAIL_COND_V(!shape, false);
 
 	btCollisionShape *btShape = shape->create_bt_shape(p_shape_xform.basis.get_scale_abs(), p_margin);
@@ -338,7 +365,26 @@ Vector3 BulletPhysicsDirectSpaceState::get_closest_point_to_object_volume(RID p_
 	}
 }
 
+<<<<<<< HEAD
 SpaceBullet::SpaceBullet() {
+=======
+SpaceBullet::SpaceBullet() :
+		broadphase(NULL),
+		collisionConfiguration(NULL),
+		dispatcher(NULL),
+		solver(NULL),
+		dynamicsWorld(NULL),
+		soft_body_world_info(NULL),
+		ghostPairCallback(NULL),
+		godotFilterCallback(NULL),
+		gravityDirection(0, -1, 0),
+		gravityMagnitude(10),
+		linear_damp(0.0),
+		angular_damp(0.0),
+		contactDebugCount(0),
+		delta_time(0.) {
+
+>>>>>>> amandotjain/pad_publishing
 	create_empty_world(GLOBAL_DEF("physics/3d/active_soft_world", true));
 	direct_access = memnew(BulletPhysicsDirectSpaceState(this));
 }
@@ -372,6 +418,7 @@ void SpaceBullet::set_param(PhysicsServer3D::AreaParameter p_param, const Varian
 			gravityDirection = p_value;
 			update_gravity();
 			break;
+<<<<<<< HEAD
 		case PhysicsServer3D::AREA_PARAM_LINEAR_DAMP:
 			linear_damp = p_value;
 			break;
@@ -379,6 +426,15 @@ void SpaceBullet::set_param(PhysicsServer3D::AreaParameter p_param, const Varian
 			angular_damp = p_value;
 			break;
 		case PhysicsServer3D::AREA_PARAM_PRIORITY:
+=======
+		case PhysicsServer::AREA_PARAM_LINEAR_DAMP:
+			linear_damp = p_value;
+			break;
+		case PhysicsServer::AREA_PARAM_ANGULAR_DAMP:
+			angular_damp = p_value;
+			break;
+		case PhysicsServer::AREA_PARAM_PRIORITY:
+>>>>>>> amandotjain/pad_publishing
 			// Priority is always 0, the lower
 			break;
 		case PhysicsServer3D::AREA_PARAM_GRAVITY_IS_POINT:
@@ -397,11 +453,19 @@ Variant SpaceBullet::get_param(PhysicsServer3D::AreaParameter p_param) {
 			return gravityMagnitude;
 		case PhysicsServer3D::AREA_PARAM_GRAVITY_VECTOR:
 			return gravityDirection;
+<<<<<<< HEAD
 		case PhysicsServer3D::AREA_PARAM_LINEAR_DAMP:
 			return linear_damp;
 		case PhysicsServer3D::AREA_PARAM_ANGULAR_DAMP:
 			return angular_damp;
 		case PhysicsServer3D::AREA_PARAM_PRIORITY:
+=======
+		case PhysicsServer::AREA_PARAM_LINEAR_DAMP:
+			return linear_damp;
+		case PhysicsServer::AREA_PARAM_ANGULAR_DAMP:
+			return angular_damp;
+		case PhysicsServer::AREA_PARAM_PRIORITY:
+>>>>>>> amandotjain/pad_publishing
 			return 0; // Priority is always 0, the lower
 		case PhysicsServer3D::AREA_PARAM_GRAVITY_IS_POINT:
 			return false;
@@ -541,10 +605,6 @@ void SpaceBullet::remove_all_collision_objects() {
 	}
 }
 
-void onBulletPreTickCallback(btDynamicsWorld *p_dynamicsWorld, btScalar timeStep) {
-	static_cast<SpaceBullet *>(p_dynamicsWorld->getWorldUserInfo())->flush_queries();
-}
-
 void onBulletTickCallback(btDynamicsWorld *p_dynamicsWorld, btScalar timeStep) {
 	const btCollisionObjectArray &colObjArray = p_dynamicsWorld->getCollisionObjectArray();
 
@@ -612,7 +672,6 @@ void SpaceBullet::create_empty_world(bool p_create_soft_world) {
 
 	dynamicsWorld->setWorldUserInfo(this);
 
-	dynamicsWorld->setInternalTickCallback(onBulletPreTickCallback, this, true);
 	dynamicsWorld->setInternalTickCallback(onBulletTickCallback, this, false);
 	dynamicsWorld->getBroadphase()->getOverlappingPairCache()->setInternalGhostPairCallback(ghostPairCallback); // Setup ghost check
 	dynamicsWorld->getPairCache()->setOverlapFilterCallback(godotFilterCallback);

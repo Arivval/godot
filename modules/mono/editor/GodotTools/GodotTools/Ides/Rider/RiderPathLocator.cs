@@ -141,7 +141,11 @@ namespace GodotTools.Ides.Rider
             if (OS.IsOSX)
             {
                 var home = Environment.GetEnvironmentVariable("HOME");
+<<<<<<< HEAD
                 if (string.IsNullOrEmpty(home))
+=======
+                if (string.IsNullOrEmpty(home)) 
+>>>>>>> amandotjain/pad_publishing
                     return string.Empty;
                 var localAppData = Path.Combine(home, @"Library/Application Support");
                 return GetToolboxRiderRootPath(localAppData);
@@ -150,7 +154,11 @@ namespace GodotTools.Ides.Rider
             if (OS.IsUnixLike)
             {
                 var home = Environment.GetEnvironmentVariable("HOME");
+<<<<<<< HEAD
                 if (string.IsNullOrEmpty(home))
+=======
+                if (string.IsNullOrEmpty(home)) 
+>>>>>>> amandotjain/pad_publishing
                     return string.Empty;
                 var localAppData = Path.Combine(home, @".local/share");
                 return GetToolboxRiderRootPath(localAppData);
@@ -322,7 +330,11 @@ namespace GodotTools.Ides.Rider
         class SettingsJson
         {
             public string install_location;
+<<<<<<< HEAD
 
+=======
+      
+>>>>>>> amandotjain/pad_publishing
             [CanBeNull]
             public static string GetInstallLocationFromJson(string json)
             {

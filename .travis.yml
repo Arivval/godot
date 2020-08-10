@@ -71,6 +71,31 @@ matrix:
       os: osx
       osx_image: xcode11.5
       compiler: clang
+<<<<<<< HEAD
+=======
+      addons:
+        homebrew:
+          packages:
+            - scons
+          update: true
+
+    - name: iOS export template (debug, Clang)
+      stage: build
+      env: PLATFORM=iphone TOOLS=no TARGET=debug CACHE_NAME=${PLATFORM}-clang
+      os: osx
+      compiler: clang
+      addons:
+        homebrew:
+          packages:
+            - scons
+          update: true
+
+    - name: Linux headless editor (release_debug, GCC 9, testing project exporting and script running)
+      stage: build
+      env: PLATFORM=server TOOLS=yes TARGET=release_debug CACHE_NAME=${PLATFORM}-tools-gcc-9 MATRIX_EVAL="CC=gcc-9 && CXX=g++-9" EXTRA_ARGS="warnings=extra werror=yes" TEST_PROJECT=yes
+      os: linux
+      compiler: gcc-9
+>>>>>>> amandotjain/pad_publishing
       addons:
         homebrew:
           packages:
@@ -115,7 +140,11 @@ before_install:
 
 install:
   - if [ "$TRAVIS_OS_NAME" = "linux" ]; then
+<<<<<<< HEAD
       pyenv global 3.8 system;
+=======
+      pyenv global 3.7.1 system;
+>>>>>>> amandotjain/pad_publishing
       pip3 install --user scons;
     fi
   - scons --version
@@ -125,11 +154,14 @@ install:
       java -version;
       misc/travis/android-tools-linux.sh;
     fi
+<<<<<<< HEAD
   - if [ "$PLATFORM" = "javascript" ]; then
       git clone --depth 1 "https://github.com/emscripten-core/emsdk.git";
       ./emsdk/emsdk install latest;
       ./emsdk/emsdk activate --no-embedded latest;
     fi
+=======
+>>>>>>> amandotjain/pad_publishing
   - if [ "$STATIC_CHECKS" = "yes" ]; then
       unset SCONS_CACHE;
       pip3 install --user black pygments;

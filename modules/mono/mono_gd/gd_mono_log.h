@@ -45,6 +45,10 @@
 #endif
 
 class GDMonoLog {
+<<<<<<< HEAD
+=======
+
+>>>>>>> amandotjain/pad_publishing
 #ifdef GD_MONO_LOG_ENABLED
 	int log_level_id;
 

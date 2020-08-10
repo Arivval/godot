@@ -35,6 +35,8 @@
 #include "core/io/net_socket.h"
 #include "core/io/packet_peer.h"
 
+class UDPServer;
+
 class PacketPeerUDP : public PacketPeer {
 	GDCLASS(PacketPeerUDP, PacketPeer);
 
@@ -51,10 +53,18 @@ protected:
 	int queue_count = 0;
 
 	IP_Address peer_addr;
+<<<<<<< HEAD
 	int peer_port = 0;
 	bool connected = false;
 	bool blocking = true;
 	bool broadcast = false;
+=======
+	int peer_port;
+	bool connected;
+	bool blocking;
+	bool broadcast;
+	UDPServer *udp_server;
+>>>>>>> amandotjain/pad_publishing
 	Ref<NetSocket> _sock;
 
 	static void _bind_methods();
@@ -72,7 +82,13 @@ public:
 	Error wait();
 	bool is_listening() const;
 
+<<<<<<< HEAD
 	Error connect_socket(Ref<NetSocket> p_sock); // Used by UDPServer
+=======
+	Error connect_shared_socket(Ref<NetSocket> p_sock, IP_Address p_ip, uint16_t p_port, UDPServer *ref); // Used by UDPServer
+	void disconnect_shared_socket(); // Used by UDPServer
+	Error store_packet(IP_Address p_ip, uint32_t p_port, uint8_t *p_buf, int p_buf_size); // Used internally and by UDPServer
+>>>>>>> amandotjain/pad_publishing
 	Error connect_to_host(const IP_Address &p_host, int p_port);
 	bool is_connected_to_host() const;
 

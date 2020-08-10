@@ -186,6 +186,10 @@ private:
 
 					unzFile pkg = unzOpen2(valid_path.utf8().get_data(), &io);
 					if (!pkg) {
+<<<<<<< HEAD
+=======
+
+>>>>>>> amandotjain/pad_publishing
 						set_message(TTR("Error opening package file (it's not in ZIP format)."), MESSAGE_ERROR);
 						memdelete(d);
 						get_ok()->set_disabled(true);
@@ -249,6 +253,10 @@ private:
 				}
 
 			} else if (valid_path.ends_with("zip")) {
+<<<<<<< HEAD
+=======
+
+>>>>>>> amandotjain/pad_publishing
 				set_message(TTR("This directory already contains a Godot project."), MESSAGE_ERROR, INSTALL_PATH);
 				memdelete(d);
 				get_ok()->set_disabled(true);
@@ -745,7 +753,14 @@ public:
 			_test_path();
 		}
 
+<<<<<<< HEAD
 		popup_centered(Size2i(500, 0) * EDSCALE);
+=======
+		// Reset the dialog to its initial size. Otherwise, the dialog window would be too large
+		// when opening a small dialog after closing a large dialog.
+		set_size(get_minimum_size());
+		popup_centered_minsize(Size2(500, 0) * EDSCALE);
+>>>>>>> amandotjain/pad_publishing
 	}
 
 	ProjectDialog() {
@@ -1329,7 +1344,11 @@ void ProjectList::create_project_item_control(int p_index) {
 	TextureRect *tf = memnew(TextureRect);
 	// The project icon may not be loaded by the time the control is displayed,
 	// so use a loading placeholder.
+<<<<<<< HEAD
 	tf->set_texture(get_theme_icon("ProjectIconLoading", "EditorIcons"));
+=======
+	tf->set_texture(get_icon("ProjectIconLoading", "EditorIcons"));
+>>>>>>> amandotjain/pad_publishing
 	tf->set_v_size_flags(SIZE_SHRINK_CENTER);
 	if (item.missing) {
 		tf->set_modulate(Color(1, 1, 1, 0.5));
@@ -2004,6 +2023,14 @@ void ProjectManager::_open_selected_projects() {
 
 		args.push_back("--editor");
 
+		if (OS::get_singleton()->is_stdout_debug_enabled()) {
+			args.push_back("--debug");
+		}
+
+		if (OS::get_singleton()->is_stdout_verbose()) {
+			args.push_back("--verbose");
+		}
+
 		if (OS::get_singleton()->is_disable_crash_handler()) {
 			args.push_back("--disable-crash-handler");
 		}
@@ -2336,11 +2363,19 @@ ProjectManager::ProjectManager() {
 		switch (display_scale) {
 			case 0: {
 				// Try applying a suitable display scale automatically
+<<<<<<< HEAD
 				const int screen = DisplayServer::get_singleton()->window_get_current_screen();
 #ifdef OSX_ENABLED
 				editor_set_scale(DisplayServer::get_singleton()->screen_get_scale(screen));
 #else
 				editor_set_scale(DisplayServer::get_singleton()->screen_get_dpi(screen) >= 192 && DisplayServer::get_singleton()->screen_get_size(screen).x > 2000 ? 2.0 : 1.0);
+=======
+#ifdef OSX_ENABLED
+				editor_set_scale(OS::get_singleton()->get_screen_max_scale());
+#else
+				const int screen = OS::get_singleton()->get_current_screen();
+				editor_set_scale(OS::get_singleton()->get_screen_dpi(screen) >= 192 && OS::get_singleton()->get_screen_size(screen).x > 2000 ? 2.0 : 1.0);
+>>>>>>> amandotjain/pad_publishing
 #endif
 			} break;
 
@@ -2371,11 +2406,13 @@ ProjectManager::ProjectManager() {
 		// Define a minimum window size to prevent UI elements from overlapping or being cut off
 		DisplayServer::get_singleton()->window_set_min_size(Size2(750, 420) * EDSCALE);
 
-#ifndef OSX_ENABLED
-		// The macOS platform implementation uses its own hiDPI window resizing code
 		// TODO: Resize windows on hiDPI displays on Windows and Linux and remove the line below
+<<<<<<< HEAD
 		DisplayServer::get_singleton()->window_set_size(DisplayServer::get_singleton()->window_get_size() * MAX(1, EDSCALE));
 #endif
+=======
+		OS::get_singleton()->set_window_size(OS::get_singleton()->get_window_size() * MAX(1, EDSCALE));
+>>>>>>> amandotjain/pad_publishing
 	}
 
 	FileDialog::set_default_show_hidden_files(EditorSettings::get_singleton()->get("filesystem/file_dialog/show_hidden_files"));
@@ -2707,8 +2744,13 @@ void ProjectListFilter::add_search_box() {
 	search_box->set_placeholder(TTR("Search"));
 	search_box->set_tooltip(
 			TTR("The search box filters projects by name and last path component.\nTo filter projects by name and full path, the query must contain at least one `/` character."));
+<<<<<<< HEAD
 	search_box->connect("text_changed", callable_mp(this, &ProjectListFilter::_search_text_changed));
 	search_box->set_h_size_flags(Control::SIZE_EXPAND_FILL);
+=======
+	search_box->connect("text_changed", this, "_search_text_changed");
+	search_box->set_h_size_flags(SIZE_EXPAND_FILL);
+>>>>>>> amandotjain/pad_publishing
 	add_child(search_box);
 
 	has_search_box = true;

@@ -3630,6 +3630,10 @@ static int start_decoder(vorb *f)
    //file vendor
    len = get32_packet(f);
    f->vendor = (char*)setup_malloc(f, sizeof(char) * (len+1));
+<<<<<<< HEAD
+=======
+   if (f->vendor == NULL)                           return error(f, VORBIS_outofmem);
+>>>>>>> amandotjain/pad_publishing
    for(i=0; i < len; ++i) {
       f->vendor[i] = get8_packet(f);
    }
@@ -3637,10 +3641,18 @@ static int start_decoder(vorb *f)
    //user comments
    f->comment_list_length = get32_packet(f);
    f->comment_list = (char**)setup_malloc(f, sizeof(char*) * (f->comment_list_length));
+<<<<<<< HEAD
+=======
+   if (f->comment_list == NULL)                     return error(f, VORBIS_outofmem);
+>>>>>>> amandotjain/pad_publishing
 
    for(i=0; i < f->comment_list_length; ++i) {
       len = get32_packet(f);
       f->comment_list[i] = (char*)setup_malloc(f, sizeof(char) * (len+1));
+<<<<<<< HEAD
+=======
+      if (f->comment_list[i] == NULL)               return error(f, VORBIS_outofmem);
+>>>>>>> amandotjain/pad_publishing
 
       for(j=0; j < len; ++j) {
          f->comment_list[i][j] = get8_packet(f);

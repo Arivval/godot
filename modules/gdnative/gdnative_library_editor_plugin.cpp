@@ -127,16 +127,38 @@ void GDNativeLibraryEditor::_on_item_button(Object *item, int column, int id) {
 	String section = (id == BUTTON_SELECT_DEPENDENCES || id == BUTTON_CLEAR_DEPENDENCES) ? "dependencies" : "entry";
 
 	if (id == BUTTON_SELECT_LIBRARY || id == BUTTON_SELECT_DEPENDENCES) {
+<<<<<<< HEAD
 		EditorFileDialog::FileMode mode = EditorFileDialog::FILE_MODE_OPEN_FILE;
 		if (id == BUTTON_SELECT_DEPENDENCES) {
 			mode = EditorFileDialog::FILE_MODE_OPEN_FILES;
+=======
+
+		TreeItem *treeItem = Object::cast_to<TreeItem>(item)->get_parent();
+		EditorFileDialog::Mode mode = EditorFileDialog::MODE_OPEN_FILE;
+
+		if (id == BUTTON_SELECT_DEPENDENCES) {
+			mode = EditorFileDialog::MODE_OPEN_FILES;
+		} else if (treeItem->get_text(0) == "iOS") {
+			mode = EditorFileDialog::MODE_OPEN_ANY;
+>>>>>>> amandotjain/pad_publishing
 		}
 
 		file_dialog->set_meta("target", target);
 		file_dialog->set_meta("section", section);
 		file_dialog->clear_filters();
+<<<<<<< HEAD
 		file_dialog->add_filter(Object::cast_to<TreeItem>(item)->get_parent()->get_metadata(0));
 		file_dialog->set_file_mode(mode);
+=======
+
+		String filter_string = treeItem->get_metadata(0);
+		Vector<String> filters = filter_string.split(",", false, 0);
+		for (int i = 0; i < filters.size(); i++) {
+			file_dialog->add_filter(filters[i]);
+		}
+
+		file_dialog->set_mode(mode);
+>>>>>>> amandotjain/pad_publishing
 		file_dialog->popup_centered_ratio();
 
 	} else if (id == BUTTON_CLEAR_LIBRARY) {
@@ -309,7 +331,9 @@ GDNativeLibraryEditor::GDNativeLibraryEditor() {
 		platform_ios.name = "iOS";
 		platform_ios.entries.push_back("armv7");
 		platform_ios.entries.push_back("arm64");
-		platform_ios.library_extension = "*.dylib";
+		// iOS can use both Static and Dynamic libraries.
+		// Frameworks is actually a folder with files.
+		platform_ios.library_extension = "*.framework; Framework, *.xcframework; Binary Framework, *.a; Static Library, *.dylib; Dynamic Library";
 		platforms["iOS"] = platform_ios;
 	}
 
@@ -359,8 +383,14 @@ GDNativeLibraryEditor::GDNativeLibraryEditor() {
 	file_dialog->set_access(EditorFileDialog::ACCESS_RESOURCES);
 	//file_dialog->set_resizable(true);
 	add_child(file_dialog);
+<<<<<<< HEAD
 	file_dialog->connect("file_selected", callable_mp(this, &GDNativeLibraryEditor::_on_library_selected));
 	file_dialog->connect("files_selected", callable_mp(this, &GDNativeLibraryEditor::_on_dependencies_selected));
+=======
+	file_dialog->connect("file_selected", this, "_on_library_selected");
+	file_dialog->connect("dir_selected", this, "_on_library_selected");
+	file_dialog->connect("files_selected", this, "_on_dependencies_selected");
+>>>>>>> amandotjain/pad_publishing
 
 	new_architecture_dialog = memnew(ConfirmationDialog);
 	add_child(new_architecture_dialog);

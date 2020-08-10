@@ -154,6 +154,10 @@ enum {
 };
 
 struct _WinTranslatePair {
+<<<<<<< HEAD
+=======
+
+>>>>>>> amandotjain/pad_publishing
 	unsigned int keysym;
 	unsigned int keycode;
 };

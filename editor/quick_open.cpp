@@ -32,21 +32,33 @@
 
 #include "core/os/keyboard.h"
 
+<<<<<<< HEAD
 void EditorQuickOpen::popup_dialog(const StringName &p_base, bool p_enable_multi, bool p_add_dirs, bool p_dontclear) {
 	add_directories = p_add_dirs;
 	popup_centered_ratio(0.6);
 	if (p_dontclear) {
+=======
+void EditorQuickOpen::popup_dialog(const StringName &p_base, bool p_enable_multi, bool p_dontclear) {
+	base_type = p_base;
+	search_options->set_select_mode(p_enable_multi ? Tree::SELECT_MULTI : Tree::SELECT_SINGLE);
+	popup_centered_ratio(0.4);
+
+	if (p_dontclear)
+>>>>>>> amandotjain/pad_publishing
 		search_box->select_all();
 	} else {
 		search_box->clear();
+<<<<<<< HEAD
 	}
 	if (p_enable_multi) {
 		search_options->set_select_mode(Tree::SELECT_MULTI);
 	} else {
 		search_options->set_select_mode(Tree::SELECT_SINGLE);
 	}
+=======
+
+>>>>>>> amandotjain/pad_publishing
 	search_box->grab_focus();
-	base_type = p_base;
 	_update_search();
 }
 
@@ -101,13 +113,16 @@ void EditorQuickOpen::_sbox_input(const Ref<InputEvent> &p_ie) {
 				}
 
 				current->select(0);
-
 			} break;
 		}
 	}
 }
 
 float EditorQuickOpen::_path_cmp(String search, String path) const {
+<<<<<<< HEAD
+=======
+
+>>>>>>> amandotjain/pad_publishing
 	// Exact match.
 	if (search == path) {
 		return 1.2f;
@@ -123,15 +138,22 @@ float EditorQuickOpen::_path_cmp(String search, String path) const {
 	return path.to_lower().similarity(search.to_lower());
 }
 
+<<<<<<< HEAD
 void EditorQuickOpen::_parse_fs(EditorFileSystemDirectory *efsd, Vector<Pair<String, Ref<Texture2D>>> &list) {
 	if (!add_directories) {
 		for (int i = 0; i < efsd->get_subdir_count(); i++) {
 			_parse_fs(efsd->get_subdir(i), list);
 		}
+=======
+void EditorQuickOpen::_parse_fs(EditorFileSystemDirectory *efsd, Vector<Pair<String, Ref<Texture> > > &list) {
+	for (int i = 0; i < efsd->get_subdir_count(); i++) {
+		_parse_fs(efsd->get_subdir(i), list);
+>>>>>>> amandotjain/pad_publishing
 	}
 
 	String search_text = search_box->get_text();
 
+<<<<<<< HEAD
 	if (add_directories) {
 		String path = efsd->get_path();
 		if (!path.ends_with("/")) {
@@ -162,10 +184,13 @@ void EditorQuickOpen::_parse_fs(EditorFileSystemDirectory *efsd, Vector<Pair<Str
 			}
 		}
 	}
+=======
+>>>>>>> amandotjain/pad_publishing
 	for (int i = 0; i < efsd->get_file_count(); i++) {
 		String file = efsd->get_file_path(i);
 		file = file.substr(6, file.length());
 
+<<<<<<< HEAD
 		if (ClassDB::is_parent_class(efsd->get_file_type(i), base_type) && (search_text.is_subsequence_ofi(file))) {
 			Pair<String, Ref<Texture2D>> pair;
 			pair.first = file;
@@ -179,6 +204,17 @@ void EditorQuickOpen::_parse_fs(EditorFileSystemDirectory *efsd, Vector<Pair<Str
 			_parse_fs(efsd->get_subdir(i), list);
 		}
 	}
+=======
+		StringName file_type = efsd->get_file_type(i);
+		if (ClassDB::is_parent_class(file_type, base_type) && search_text.is_subsequence_ofi(file)) {
+			Pair<String, Ref<Texture> > pair;
+			pair.first = file;
+			StringName icon_name = search_options->has_icon(file_type, ei) ? file_type : ot;
+			pair.second = search_options->get_icon(icon_name, ei);
+			list.push_back(pair);
+		}
+	}
+>>>>>>> amandotjain/pad_publishing
 }
 
 Vector<Pair<String, Ref<Texture2D>>> EditorQuickOpen::_sort_fs(Vector<Pair<String, Ref<Texture2D>>> &list) {
@@ -279,21 +315,37 @@ EditorQuickOpen::EditorQuickOpen() {
 	vbc->connect("theme_changed", callable_mp(this, &EditorQuickOpen::_theme_changed));
 
 	add_child(vbc);
+
 	search_box = memnew(LineEdit);
+<<<<<<< HEAD
 	vbc->add_margin_child(TTR("Search:"), search_box);
 	search_box->connect("text_changed", callable_mp(this, &EditorQuickOpen::_text_changed));
 	search_box->connect("gui_input", callable_mp(this, &EditorQuickOpen::_sbox_input));
+=======
+	search_box->connect("text_changed", this, "_text_changed");
+	search_box->connect("gui_input", this, "_sbox_input");
+	vbc->add_margin_child(TTR("Search:"), search_box);
+
+>>>>>>> amandotjain/pad_publishing
 	search_options = memnew(Tree);
+	search_options->connect("item_activated", this, "_confirmed");
+	search_options->set_hide_root(true);
+	search_options->set_hide_folding(true);
+	search_options->add_constant_override("draw_guides", 1);
 	vbc->add_margin_child(TTR("Matches:"), search_options, true);
+
 	get_ok()->set_text(TTR("Open"));
 	get_ok()->set_disabled(true);
 	register_text_enter(search_box);
 	set_hide_on_ok(false);
+<<<<<<< HEAD
 	search_options->connect("item_activated", callable_mp(this, &EditorQuickOpen::_confirmed));
 	search_options->set_hide_root(true);
 	search_options->set_hide_folding(true);
 	search_options->add_theme_constant_override("draw_guides", 1);
+=======
+
+>>>>>>> amandotjain/pad_publishing
 	ei = "EditorIcons";
 	ot = "Object";
-	add_directories = false;
 }

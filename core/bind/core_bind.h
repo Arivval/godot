@@ -149,6 +149,59 @@ public:
 	virtual void open_midi_inputs();
 	virtual void close_midi_inputs();
 
+<<<<<<< HEAD
+=======
+	virtual int get_screen_count() const;
+	virtual int get_current_screen() const;
+	virtual void set_current_screen(int p_screen);
+	virtual Point2 get_screen_position(int p_screen = -1) const;
+	virtual Size2 get_screen_size(int p_screen = -1) const;
+	virtual int get_screen_dpi(int p_screen = -1) const;
+	virtual float get_screen_scale(int p_screen = -1) const;
+	virtual float get_screen_max_scale() const;
+	virtual Point2 get_window_position() const;
+	virtual void set_window_position(const Point2 &p_position);
+	virtual Size2 get_max_window_size() const;
+	virtual Size2 get_min_window_size() const;
+	virtual Size2 get_window_size() const;
+	virtual Size2 get_real_window_size() const;
+	virtual Rect2 get_window_safe_area() const;
+	virtual void set_max_window_size(const Size2 &p_size);
+	virtual void set_min_window_size(const Size2 &p_size);
+	virtual void set_window_size(const Size2 &p_size);
+	virtual void set_window_fullscreen(bool p_enabled);
+	virtual bool is_window_fullscreen() const;
+	virtual void set_window_resizable(bool p_enabled);
+	virtual bool is_window_resizable() const;
+	virtual void set_window_minimized(bool p_enabled);
+	virtual bool is_window_minimized() const;
+	virtual void set_window_maximized(bool p_enabled);
+	virtual bool is_window_maximized() const;
+	virtual void set_window_always_on_top(bool p_enabled);
+	virtual bool is_window_always_on_top() const;
+	virtual bool is_window_focused() const;
+	virtual void request_attention();
+	virtual void center_window();
+	virtual void move_window_to_foreground();
+
+	virtual void set_borderless_window(bool p_borderless);
+	virtual bool get_borderless_window() const;
+
+	virtual bool get_window_per_pixel_transparency_enabled() const;
+	virtual void set_window_per_pixel_transparency_enabled(bool p_enabled);
+
+	virtual void set_ime_active(const bool p_active);
+	virtual void set_ime_position(const Point2 &p_pos);
+	virtual Point2 get_ime_selection() const;
+	virtual String get_ime_text() const;
+
+	Error native_video_play(String p_path, float p_volume, String p_audio_track, String p_subtitle_track);
+	bool native_video_is_playing();
+	void native_video_pause();
+	void native_video_unpause();
+	void native_video_stop();
+
+>>>>>>> amandotjain/pad_publishing
 	void set_low_processor_usage_mode(bool p_enabled);
 	bool is_in_low_processor_usage_mode() const;
 
@@ -170,6 +223,15 @@ public:
 	Vector<String> get_cmdline_args();
 
 	String get_locale() const;
+<<<<<<< HEAD
+=======
+	String get_latin_keyboard_variant() const;
+	int keyboard_get_layout_count() const;
+	int keyboard_get_current_layout() const;
+	void keyboard_set_current_layout(int p_index);
+	String keyboard_get_layout_language(int p_index) const;
+	String keyboard_get_layout_name(int p_index) const;
+>>>>>>> amandotjain/pad_publishing
 
 	String get_model_name() const;
 
@@ -457,12 +519,15 @@ VARIANT_ENUM_CAST(_File::CompressionMode);
 class _Directory : public Reference {
 	GDCLASS(_Directory, Reference);
 	DirAccess *d;
+	bool dir_open = false;
 
 protected:
 	static void _bind_methods();
 
 public:
 	Error open(const String &p_path);
+
+	bool is_open() const;
 
 	Error list_dir_begin(bool p_skip_navigational = false, bool p_skip_hidden = false); // This starts dir listing.
 	String get_next();
@@ -498,6 +563,10 @@ private:
 };
 
 class _Marshalls : public Object {
+<<<<<<< HEAD
+=======
+
+>>>>>>> amandotjain/pad_publishing
 	GDCLASS(_Marshalls, Object);
 
 	static _Marshalls *singleton;

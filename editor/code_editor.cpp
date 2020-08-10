@@ -108,6 +108,7 @@ void FindReplaceBar::_notification(int p_what) {
 
 void FindReplaceBar::_unhandled_input(const Ref<InputEvent> &p_event) {
 	Ref<InputEventKey> k = p_event;
+<<<<<<< HEAD
 	if (k.is_valid()) {
 		if (k->is_pressed() && (text_edit->has_focus() || vbc_lineedit->is_a_parent_of(get_focus_owner()))) {
 			bool accepted = true;
@@ -120,10 +121,27 @@ void FindReplaceBar::_unhandled_input(const Ref<InputEvent> &p_event) {
 					accepted = false;
 				} break;
 			}
+=======
+	if (!k.is_valid() || !k->is_pressed()) {
+		return;
+	}
 
-			if (accepted) {
-				accept_event();
-			}
+	Control *focus_owner = get_focus_owner();
+	if (text_edit->has_focus() || (focus_owner && vbc_lineedit->is_a_parent_of(focus_owner))) {
+		bool accepted = true;
+
+		switch (k->get_scancode()) {
+			case KEY_ESCAPE: {
+				_hide_bar();
+			} break;
+			default: {
+				accepted = false;
+			} break;
+		}
+>>>>>>> amandotjain/pad_publishing
+
+		if (accepted) {
+			accept_event();
 		}
 	}
 }
@@ -292,7 +310,11 @@ void FindReplaceBar::_replace_all() {
 	}
 
 	text_edit->set_v_scroll(vsval);
+<<<<<<< HEAD
 	matches_label->add_theme_color_override("font_color", rc > 0 ? get_theme_color("font_color", "Label") : get_theme_color("error_color", "Editor"));
+=======
+	matches_label->add_color_override("font_color", rc > 0 ? get_color("font_color", "Label") : get_color("error_color", "Editor"));
+>>>>>>> amandotjain/pad_publishing
 	matches_label->set_text(vformat(TTR("%d replaced."), rc));
 
 	text_edit->call_deferred("connect", "text_changed", Callable(this, "_editor_text_changed"));
@@ -337,10 +359,16 @@ void FindReplaceBar::_update_results_count() {
 		int pos_subsequent = pos + searched.length();
 		if (is_whole_words()) {
 			from_pos = pos + 1; // Making sure we won't hit the same match next time, if we get out via a continue.
+<<<<<<< HEAD
 			if (pos > 0 && !(is_symbol(full_text[pos - 1]) || full_text[pos - 1] == '\n')) {
 				continue;
 			}
 			if (pos_subsequent < full_text.length() && !(is_symbol(full_text[pos_subsequent]) || full_text[pos_subsequent] == '\n')) {
+=======
+			if (pos > 0 && !(is_symbol(full_text[pos - 1]) || full_text[pos - 1] == '\n'))
+				continue;
+			if (pos_subsequent < full_text.length() && !(is_symbol(full_text[pos_subsequent]) || full_text[pos_subsequent] == '\n'))
+>>>>>>> amandotjain/pad_publishing
 				continue;
 			}
 		}

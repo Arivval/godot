@@ -503,9 +503,13 @@ void GraphNode::_connpos_update() {
 			}
 		}
 
+<<<<<<< HEAD
 		if (vofs > 0) {
 			vofs += sep;
 		}
+=======
+		vofs += sep;
+>>>>>>> amandotjain/pad_publishing
 		vofs += size.y;
 		idx++;
 	}

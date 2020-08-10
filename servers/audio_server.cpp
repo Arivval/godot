@@ -30,7 +30,10 @@
 
 #include "audio_server.h"
 
+<<<<<<< HEAD
 #include "core/debugger/engine_debugger.h"
+=======
+>>>>>>> amandotjain/pad_publishing
 #include "core/io/resource_loader.h"
 #include "core/os/file_access.h"
 #include "core/os/os.h"
@@ -184,6 +187,10 @@ void AudioDriverManager::initialize(int p_driver) {
 	GLOBAL_DEF_RST("audio/enable_audio_input", false);
 	GLOBAL_DEF_RST("audio/mix_rate", DEFAULT_MIX_RATE);
 	GLOBAL_DEF_RST("audio/output_latency", DEFAULT_OUTPUT_LATENCY);
+<<<<<<< HEAD
+=======
+	GLOBAL_DEF_RST("audio/output_latency.web", 50); // Safer default output_latency for web.
+>>>>>>> amandotjain/pad_publishing
 
 	int failed_driver = -1;
 

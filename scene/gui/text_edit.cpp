@@ -1548,11 +1548,19 @@ void TextEdit::_notification(int p_what) {
 			bool completion_below = false;
 			if (completion_active && completion_options.size() > 0) {
 				// Code completion box.
+<<<<<<< HEAD
 				Ref<StyleBox> csb = get_theme_stylebox("completion");
 				int maxlines = get_theme_constant("completion_lines");
 				int cmax_width = get_theme_constant("completion_max_width") * cache.font->get_char_size('x').x;
 				int scrollw = get_theme_constant("completion_scroll_width");
 				Color scrollc = get_theme_color("completion_scroll_color");
+=======
+				Ref<StyleBox> csb = get_stylebox("completion");
+				int maxlines = get_constant("completion_lines");
+				int cmax_width = get_constant("completion_max_width") * cache.font->get_char_size('x').x;
+				int scrollw = get_constant("completion_scroll_width");
+				Color scrollc = get_color("completion_scroll_color");
+>>>>>>> amandotjain/pad_publishing
 
 				const int completion_options_size = completion_options.size();
 				int lines = MIN(completion_options_size, maxlines);
@@ -1593,7 +1601,11 @@ void TextEdit::_notification(int p_what) {
 
 				completion_rect.size.width = w + 2;
 				completion_rect.size.height = h;
+<<<<<<< HEAD
 				if (completion_options_size <= maxlines) {
+=======
+				if (completion_options_size <= maxlines)
+>>>>>>> amandotjain/pad_publishing
 					scrollw = 0;
 				}
 
@@ -1603,7 +1615,11 @@ void TextEdit::_notification(int p_what) {
 					RenderingServer::get_singleton()->canvas_item_add_rect(ci, Rect2(completion_rect.position, completion_rect.size + Size2(scrollw, 0)), cache.completion_background_color);
 				}
 				int line_from = CLAMP(completion_index - lines / 2, 0, completion_options_size - lines);
+<<<<<<< HEAD
 				RenderingServer::get_singleton()->canvas_item_add_rect(ci, Rect2(Point2(completion_rect.position.x, completion_rect.position.y + (completion_index - line_from) * get_row_height()), Size2(completion_rect.size.width, get_row_height())), cache.completion_selected_color);
+=======
+				VisualServer::get_singleton()->canvas_item_add_rect(ci, Rect2(Point2(completion_rect.position.x, completion_rect.position.y + (completion_index - line_from) * get_row_height()), Size2(completion_rect.size.width, get_row_height())), cache.completion_selected_color);
+>>>>>>> amandotjain/pad_publishing
 				draw_rect(Rect2(completion_rect.position + Vector2(icon_area_size.x + icon_hsep, 0), Size2(MIN(nofs, completion_rect.size.width - (icon_area_size.x + icon_hsep)), completion_rect.size.height)), cache.completion_existing_color);
 
 				for (int i = 0; i < lines; i++) {
@@ -7133,7 +7149,11 @@ void TextEdit::_bind_methods() {
 	BIND_ENUM_CONSTANT(MENU_MAX);
 
 	GLOBAL_DEF("gui/timers/text_edit_idle_detect_sec", 3);
+<<<<<<< HEAD
 	ProjectSettings::get_singleton()->set_custom_property_info("gui/timers/text_edit_idle_detect_sec", PropertyInfo(Variant::FLOAT, "gui/timers/text_edit_idle_detect_sec", PROPERTY_HINT_RANGE, "0,10,0.01,or_greater")); // No negative numbers.
+=======
+	ProjectSettings::get_singleton()->set_custom_property_info("gui/timers/text_edit_idle_detect_sec", PropertyInfo(Variant::REAL, "gui/timers/text_edit_idle_detect_sec", PROPERTY_HINT_RANGE, "0,10,0.01,or_greater")); // No negative numbers.
+>>>>>>> amandotjain/pad_publishing
 	GLOBAL_DEF("gui/common/text_edit_undo_stack_max_size", 1024);
 	ProjectSettings::get_singleton()->set_custom_property_info("gui/common/text_edit_undo_stack_max_size", PropertyInfo(Variant::INT, "gui/common/text_edit_undo_stack_max_size", PROPERTY_HINT_RANGE, "0,10000,1,or_greater")); // No negative numbers.
 }
@@ -7215,7 +7235,11 @@ TextEdit::TextEdit() {
 	current_op.type = TextOperation::TYPE_NONE;
 	undo_enabled = true;
 	undo_stack_max_size = GLOBAL_GET("gui/common/text_edit_undo_stack_max_size");
+<<<<<<< HEAD
 	undo_stack_pos = nullptr;
+=======
+	undo_stack_pos = NULL;
+>>>>>>> amandotjain/pad_publishing
 	setting_text = false;
 	last_dblclk = 0;
 	current_op.version = 0;

@@ -311,7 +311,10 @@ void Main::print_help(const char *p_binary) {
 	OS::get_singleton()->print("  --no-window                      Disable window creation (Windows only). Useful together with --script.\n");
 	OS::get_singleton()->print("  --enable-vsync-via-compositor    When vsync is enabled, vsync via the OS' window compositor (Windows only).\n");
 	OS::get_singleton()->print("  --disable-vsync-via-compositor   Disable vsync via the OS' window compositor (Windows only).\n");
+<<<<<<< HEAD
 	OS::get_singleton()->print("  --single-window                  Use a single window (no separate subwindows).\n");
+=======
+>>>>>>> amandotjain/pad_publishing
 	OS::get_singleton()->print("  --tablet-driver                  Tablet input driver (");
 	for (int i = 0; i < OS::get_singleton()->get_tablet_driver_count(); i++) {
 		if (i != 0)
@@ -680,6 +683,26 @@ Error Main::setup(const char *execpath, int argc, char *argv[], bool p_second_ph
 		} else if (I->get() == "--no-window") { // disable window creation (Windows only)
 
 			OS::get_singleton()->set_no_window_mode(true);
+		} else if (I->get() == "--tablet-driver") {
+			if (I->next()) {
+				tablet_driver = I->next()->get();
+				bool found = false;
+				for (int i = 0; i < OS::get_singleton()->get_tablet_driver_count(); i++) {
+					if (tablet_driver == OS::get_singleton()->get_tablet_driver_name(i)) {
+						found = true;
+					}
+				}
+
+				if (!found) {
+					OS::get_singleton()->print("Unknown tablet driver '%s', aborting.\n", tablet_driver.utf8().get_data());
+					goto error;
+				}
+
+				N = I->next()->next();
+			} else {
+				OS::get_singleton()->print("Missing tablet driver argument, aborting.\n");
+				goto error;
+			}
 		} else if (I->get() == "--enable-vsync-via-compositor") {
 			window_vsync_via_compositor = true;
 			saw_vsync_via_compositor_override = true;
@@ -835,7 +858,12 @@ Error Main::setup(const char *execpath, int argc, char *argv[], bool p_second_ph
 			};
 
 		} else if (I->get() == "-d" || I->get() == "--debug") {
+<<<<<<< HEAD
 			debug_uri = "local://";
+=======
+			debug_mode = "local";
+			OS::get_singleton()->_debug_stdout = true;
+>>>>>>> amandotjain/pad_publishing
 #if defined(DEBUG_ENABLED) && !defined(SERVER_ENABLED)
 		} else if (I->get() == "--debug-collisions") {
 			debug_collisions = true;
@@ -953,16 +981,6 @@ Error Main::setup(const char *execpath, int argc, char *argv[], bool p_second_ph
 	}
 #endif
 
-	GLOBAL_DEF("logging/file_logging/enable_file_logging", false);
-	GLOBAL_DEF("logging/file_logging/log_path", "user://logs/log.txt");
-	GLOBAL_DEF("logging/file_logging/max_log_files", 10);
-	ProjectSettings::get_singleton()->set_custom_property_info("logging/file_logging/max_log_files", PropertyInfo(Variant::INT, "logging/file_logging/max_log_files", PROPERTY_HINT_RANGE, "0,20,1,or_greater")); //no negative numbers
-	if (FileAccess::get_create_func(FileAccess::ACCESS_USERDATA) && GLOBAL_GET("logging/file_logging/enable_file_logging")) {
-		String base_path = GLOBAL_GET("logging/file_logging/log_path");
-		int max_files = GLOBAL_GET("logging/file_logging/max_log_files");
-		OS::get_singleton()->add_logger(memnew(RotatedFileLogger(base_path, max_files)));
-	}
-
 #ifdef TOOLS_ENABLED
 	if (editor) {
 		Engine::get_singleton()->set_editor_hint(true);
@@ -978,6 +996,23 @@ Error Main::setup(const char *execpath, int argc, char *argv[], bool p_second_ph
 		project_manager = main_args.size() == 0 && !found_project;
 	}
 #endif
+
+	GLOBAL_DEF("logging/file_logging/enable_file_logging", false);
+	// Only file logging by default on desktop platforms as logs can't be
+	// accessed easily on mobile/Web platforms (if at all).
+	// This also prevents logs from being created for the editor instance, as feature tags
+	// are disabled while in the editor (even if they should logically apply).
+	GLOBAL_DEF("logging/file_logging/enable_file_logging.pc", true);
+	GLOBAL_DEF("logging/file_logging/log_path", "user://logs/godot.log");
+	GLOBAL_DEF("logging/file_logging/max_log_files", 5);
+	ProjectSettings::get_singleton()->set_custom_property_info("logging/file_logging/max_log_files", PropertyInfo(Variant::INT, "logging/file_logging/max_log_files", PROPERTY_HINT_RANGE, "0,20,1,or_greater")); //no negative numbers
+	if (!project_manager && !editor && FileAccess::get_create_func(FileAccess::ACCESS_USERDATA) && GLOBAL_GET("logging/file_logging/enable_file_logging")) {
+		// Don't create logs for the project manager as they would be written to
+		// the current working directory, which is inconvenient.
+		String base_path = GLOBAL_GET("logging/file_logging/log_path");
+		int max_files = GLOBAL_GET("logging/file_logging/max_log_files");
+		OS::get_singleton()->add_logger(memnew(RotatedFileLogger(base_path, max_files)));
+	}
 
 	if (main_args.size() == 0 && String(GLOBAL_DEF("application/run/main_scene", "")) == "") {
 #ifdef TOOLS_ENABLED
@@ -1017,8 +1052,15 @@ Error Main::setup(const char *execpath, int argc, char *argv[], bool p_second_ph
 		display_driver = GLOBAL_GET("rendering/quality/driver/driver_name");
 	}
 
+<<<<<<< HEAD
 	// Assigning here even though it's GLES2-specific, to be sure that it appears in docs
 	GLOBAL_DEF("rendering/quality/2d/gles2_use_nvidia_rect_flicker_workaround", false);
+=======
+	GLOBAL_DEF("rendering/quality/driver/fallback_to_gles2", false);
+
+	// Assigning here, to be sure that it appears in docs
+	GLOBAL_DEF("rendering/quality/2d/use_nvidia_rect_flicker_workaround", false);
+>>>>>>> amandotjain/pad_publishing
 
 	GLOBAL_DEF("display/window/size/width", 1024);
 	ProjectSettings::get_singleton()->set_custom_property_info("display/window/size/width", PropertyInfo(Variant::INT, "display/window/size/width", PROPERTY_HINT_RANGE, "0,7680,or_greater")); // 8K resolution
@@ -1086,6 +1128,13 @@ Error Main::setup(const char *execpath, int argc, char *argv[], bool p_second_ph
 		tablet_driver = GLOBAL_DEF_RST("display/window/tablet_driver", OS::get_singleton()->get_tablet_driver_name(0));
 	}
 
+<<<<<<< HEAD
+=======
+	if (tablet_driver == "") { // specified in project.godot
+		tablet_driver = GLOBAL_DEF_RST("display/window/tablet_driver", OS::get_singleton()->get_tablet_driver_name(0));
+	}
+
+>>>>>>> amandotjain/pad_publishing
 	for (int i = 0; i < OS::get_singleton()->get_tablet_driver_count(); i++) {
 		if (tablet_driver == OS::get_singleton()->get_tablet_driver_name(i)) {
 			OS::get_singleton()->set_current_tablet_driver(OS::get_singleton()->get_tablet_driver_name(i));
@@ -1097,7 +1146,10 @@ Error Main::setup(const char *execpath, int argc, char *argv[], bool p_second_ph
 		OS::get_singleton()->set_current_tablet_driver(OS::get_singleton()->get_tablet_driver_name(0));
 	}
 
+<<<<<<< HEAD
 	/* todo restore
+=======
+>>>>>>> amandotjain/pad_publishing
 	OS::get_singleton()->_allow_layered = GLOBAL_DEF("display/window/per_pixel_transparency/allowed", false);
 	video_mode.layered = GLOBAL_DEF("display/window/per_pixel_transparency/enabled", false);
 */
@@ -1331,6 +1383,9 @@ Error Main::setup2(Thread::ID p_main_tid_override) {
 
 	// also init our xr_server from here
 	xr_server = memnew(XRServer);
+
+	// and finally setup this property under visual_server
+	VisualServer::get_singleton()->set_render_loop_enabled(!disable_render_loop);
 
 	register_core_singletons();
 
@@ -1729,13 +1784,20 @@ bool Main::start() {
 		}
 
 		if (script_res->can_instance()) {
+<<<<<<< HEAD
+=======
+
+>>>>>>> amandotjain/pad_publishing
 			StringName instance_type = script_res->get_instance_base_type();
 			Object *obj = ClassDB::instance(instance_type);
 			MainLoop *script_loop = Object::cast_to<MainLoop>(obj);
 			if (!script_loop) {
 				if (obj) {
 					memdelete(obj);
+<<<<<<< HEAD
 				}
+=======
+>>>>>>> amandotjain/pad_publishing
 				ERR_FAIL_V_MSG(false, vformat("Can't load the script \"%s\" as it doesn't inherit from SceneTree or MainLoop.", script));
 			}
 
@@ -1924,9 +1986,15 @@ bool Main::start() {
 			// Append a suffix to the window title to denote that the project is running
 			// from a debug build (including the editor). Since this results in lower performance,
 			// this should be clearly presented to the user.
+<<<<<<< HEAD
 			DisplayServer::get_singleton()->window_set_title(vformat("%s (DEBUG)", appname));
 #else
 			DisplayServer::get_singleton()->window_set_title(appname);
+=======
+			OS::get_singleton()->set_window_title(vformat("%s (DEBUG)", appname));
+#else
+			OS::get_singleton()->set_window_title(appname);
+>>>>>>> amandotjain/pad_publishing
 #endif
 
 			int shadow_atlas_size = GLOBAL_GET("rendering/quality/shadow_atlas/size");
@@ -2115,7 +2183,6 @@ bool Main::start() {
  */
 
 uint64_t Main::last_ticks = 0;
-uint64_t Main::target_ticks = 0;
 uint32_t Main::frames = 0;
 uint32_t Main::frame = 0;
 bool Main::force_redraw_requested = false;
@@ -2209,7 +2276,13 @@ bool Main::iteration() {
 	}
 	message_queue->flush();
 
+<<<<<<< HEAD
 	RenderingServer::get_singleton()->sync(); //sync if still drawing from previous frames.
+=======
+	VisualServer::get_singleton()->sync(); //sync if still drawing from previous frames.
+
+	if (OS::get_singleton()->can_draw() && VisualServer::get_singleton()->is_render_loop_enabled()) {
+>>>>>>> amandotjain/pad_publishing
 
 	if (DisplayServer::get_singleton()->can_any_window_draw() && RenderingServer::get_singleton()->is_render_loop_enabled()) {
 		if ((!force_redraw_requested) && OS::get_singleton()->is_in_low_processor_usage_mode()) {
@@ -2266,6 +2339,7 @@ bool Main::iteration() {
 		return exit;
 	}
 
+<<<<<<< HEAD
 	const uint32_t frame_delay = Engine::get_singleton()->get_frame_delay();
 	if (frame_delay) {
 		// Add fixed frame delay to decrease CPU/GPU usage. This doesn't take
@@ -2298,6 +2372,9 @@ bool Main::iteration() {
 		current_ticks = OS::get_singleton()->get_ticks_usec();
 		target_ticks = MIN(MAX(target_ticks, current_ticks - dynamic_delay), current_ticks + dynamic_delay);
 	}
+=======
+	OS::get_singleton()->add_frame_delay(OS::get_singleton()->can_draw());
+>>>>>>> amandotjain/pad_publishing
 
 #ifdef TOOLS_ENABLED
 	if (auto_build_solutions) {
@@ -2335,6 +2412,17 @@ void Main::cleanup() {
 
 	// Flush before uninitializing the scene, but delete the MessageQueue as late as possible.
 	message_queue->flush();
+<<<<<<< HEAD
+=======
+
+	if (script_debugger) {
+		if (use_debug_profiler) {
+			script_debugger->profiling_end();
+		}
+
+		memdelete(script_debugger);
+	}
+>>>>>>> amandotjain/pad_publishing
 
 	OS::get_singleton()->delete_main_loop();
 

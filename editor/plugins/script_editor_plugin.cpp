@@ -537,12 +537,20 @@ void ScriptEditor::_close_tab(int p_idx, bool p_save, bool p_history_back) {
 
 	ScriptEditorBase *current = Object::cast_to<ScriptEditorBase>(tab_container->get_child(selected));
 	if (current) {
+		Ref<Script> script = current->get_edited_resource();
 		if (p_save) {
-			apply_scripts();
+			// Do not try to save internal scripts
+			if (!(script->get_path() == "" || script->get_path().find("local://") != -1 || script->get_path().find("::") != -1)) {
+				_menu_option(FILE_SAVE);
+			}
 		}
 
+<<<<<<< HEAD
 		Ref<Script> script = current->get_edited_resource();
 		if (script != nullptr) {
+=======
+		if (script != NULL) {
+>>>>>>> amandotjain/pad_publishing
 			previous_scripts.push_back(script->get_path());
 			notify_script_close(script);
 		}
@@ -1314,8 +1322,13 @@ void ScriptEditor::_notification(int p_what) {
 			help_search->set_icon(get_theme_icon("HelpSearch", "EditorIcons"));
 			site_search->set_icon(get_theme_icon("Instance", "EditorIcons"));
 
+<<<<<<< HEAD
 			script_forward->set_icon(get_theme_icon("Forward", "EditorIcons"));
 			script_back->set_icon(get_theme_icon("Back", "EditorIcons"));
+=======
+			help_search->set_icon(get_icon("HelpSearch", "EditorIcons"));
+			site_search->set_icon(get_icon("Instance", "EditorIcons"));
+>>>>>>> amandotjain/pad_publishing
 
 			members_overview_alphabeta_sort_button->set_icon(get_theme_icon("Sort", "EditorIcons"));
 
@@ -3123,8 +3136,12 @@ ScriptEditor::ScriptEditor(EditorNode *p_editor) {
 	menu_hb->add_child(site_search);
 	site_search->set_tooltip(TTR("Open Godot online documentation."));
 
+<<<<<<< HEAD
 	help_search = memnew(Button);
 	help_search->set_flat(true);
+=======
+	help_search = memnew(ToolButton);
+>>>>>>> amandotjain/pad_publishing
 	help_search->set_text(TTR("Search Help"));
 	help_search->connect("pressed", callable_mp(this, &ScriptEditor::_menu_option), varray(SEARCH_HELP));
 	menu_hb->add_child(help_search);

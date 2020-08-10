@@ -32,7 +32,10 @@ package org.godotengine.godot;
 
 import org.godotengine.godot.input.*;
 
+<<<<<<< HEAD
 import android.app.Activity;
+=======
+>>>>>>> amandotjain/pad_publishing
 import android.content.*;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;

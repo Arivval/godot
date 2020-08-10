@@ -806,9 +806,26 @@ void GraphEdit::_gui_input(const Ref<InputEvent> &p_ev) {
 			bool in_box = r.intersects(box_selecting_rect);
 
 			if (in_box) {
+<<<<<<< HEAD
 				gn->set_selected(box_selection_mode_additive);
 			} else {
 				gn->set_selected(previus_selected.find(gn) != nullptr);
+=======
+				if (!gn->is_selected() && box_selection_mode_additive) {
+					emit_signal("node_selected", gn);
+				} else if (gn->is_selected() && !box_selection_mode_additive) {
+					emit_signal("node_unselected", gn);
+				}
+				gn->set_selected(box_selection_mode_additive);
+			} else {
+				bool select = (previus_selected.find(gn) != NULL);
+				if (gn->is_selected() && !select) {
+					emit_signal("node_unselected", gn);
+				} else if (!gn->is_selected() && select) {
+					emit_signal("node_selected", gn);
+				}
+				gn->set_selected(select);
+>>>>>>> amandotjain/pad_publishing
 			}
 		}
 
@@ -826,7 +843,17 @@ void GraphEdit::_gui_input(const Ref<InputEvent> &p_ev) {
 						continue;
 					}
 
+<<<<<<< HEAD
 					gn->set_selected(previus_selected.find(gn) != nullptr);
+=======
+					bool select = (previus_selected.find(gn) != NULL);
+					if (gn->is_selected() && !select) {
+						emit_signal("node_unselected", gn);
+					} else if (!gn->is_selected() && select) {
+						emit_signal("node_selected", gn);
+					}
+					gn->set_selected(select);
+>>>>>>> amandotjain/pad_publishing
 				}
 				top_layer->update();
 			} else {
@@ -849,6 +876,10 @@ void GraphEdit::_gui_input(const Ref<InputEvent> &p_ev) {
 						Rect2 r = gn->get_rect();
 						r.size *= zoom;
 						if (r.has_point(b->get_position())) {
+<<<<<<< HEAD
+=======
+							emit_signal("node_unselected", gn);
+>>>>>>> amandotjain/pad_publishing
 							gn->set_selected(false);
 						}
 					}
@@ -967,7 +998,10 @@ void GraphEdit::_gui_input(const Ref<InputEvent> &p_ev) {
 						GraphNode *gn2 = Object::cast_to<GraphNode>(get_child(i));
 						if (!gn2) {
 							continue;
+<<<<<<< HEAD
 						}
+=======
+>>>>>>> amandotjain/pad_publishing
 						if (gn2->is_selected()) {
 							emit_signal("node_unselected", gn2);
 						}
@@ -1253,8 +1287,13 @@ void GraphEdit::_bind_methods() {
 	ADD_SIGNAL(MethodInfo("paste_nodes_request"));
 	ADD_SIGNAL(MethodInfo("node_selected", PropertyInfo(Variant::OBJECT, "node", PROPERTY_HINT_RESOURCE_TYPE, "Node")));
 	ADD_SIGNAL(MethodInfo("node_unselected", PropertyInfo(Variant::OBJECT, "node", PROPERTY_HINT_RESOURCE_TYPE, "Node")));
+<<<<<<< HEAD
 	ADD_SIGNAL(MethodInfo("connection_to_empty", PropertyInfo(Variant::STRING_NAME, "from"), PropertyInfo(Variant::INT, "from_slot"), PropertyInfo(Variant::VECTOR2, "release_position")));
 	ADD_SIGNAL(MethodInfo("connection_from_empty", PropertyInfo(Variant::STRING_NAME, "to"), PropertyInfo(Variant::INT, "to_slot"), PropertyInfo(Variant::VECTOR2, "release_position")));
+=======
+	ADD_SIGNAL(MethodInfo("connection_to_empty", PropertyInfo(Variant::STRING, "from"), PropertyInfo(Variant::INT, "from_slot"), PropertyInfo(Variant::VECTOR2, "release_position")));
+	ADD_SIGNAL(MethodInfo("connection_from_empty", PropertyInfo(Variant::STRING, "to"), PropertyInfo(Variant::INT, "to_slot"), PropertyInfo(Variant::VECTOR2, "release_position")));
+>>>>>>> amandotjain/pad_publishing
 	ADD_SIGNAL(MethodInfo("delete_nodes_request"));
 	ADD_SIGNAL(MethodInfo("_begin_node_move"));
 	ADD_SIGNAL(MethodInfo("_end_node_move"));

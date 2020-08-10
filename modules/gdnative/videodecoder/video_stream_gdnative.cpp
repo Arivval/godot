@@ -213,8 +213,17 @@ void VideoStreamPlaybackGDNative::cleanup() {
 	}
 	if (pcm) {
 		memfree(pcm);
+<<<<<<< HEAD
 	}
 	pcm = nullptr;
+=======
+	if (file) {
+		file->close();
+		memdelete(file);
+		file = NULL;
+	}
+	pcm = NULL;
+>>>>>>> amandotjain/pad_publishing
 	time = 0;
 	num_channels = -1;
 	interface = nullptr;

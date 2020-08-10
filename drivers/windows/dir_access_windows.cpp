@@ -67,7 +67,11 @@ Error DirAccessWindows::list_dir_begin() {
 	list_dir_end();
 	p->h = FindFirstFileExW((current_dir + "\\*").c_str(), FindExInfoStandard, &p->fu, FindExSearchNameMatch, nullptr, 0);
 
-	return (p->h == INVALID_HANDLE_VALUE) ? ERR_CANT_OPEN : OK;
+	if (p->h == INVALID_HANDLE_VALUE) {
+		return ERR_CANT_OPEN;
+	}
+
+	return OK;
 }
 
 String DirAccessWindows::get_next() {
@@ -200,6 +204,20 @@ String DirAccessWindows::get_current_dir(bool p_include_drive) {
 		}
 		return current_dir;
 	}
+}
+
+String DirAccessWindows::get_current_dir_without_drive() {
+
+	String dir = get_current_dir();
+
+	if (_get_root_string() == "") {
+		int p = current_dir.find(":");
+		if (p != -1) {
+			dir = dir.right(p + 1);
+		}
+	}
+
+	return dir;
 }
 
 bool DirAccessWindows::file_exists(String p_file) {
