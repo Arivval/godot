@@ -138,7 +138,7 @@ bool PackedSourcePCK::try_open_pack(const String &p_path, bool p_replace_files, 
 		if (p_offset != 0) {
 			f->close();
 			memdelete(f);
-			return false;
+			ERR_FAIL_V_MSG(false, "Loading self-contained executable with offset not supported.");
 		}
 
 		//maybe at the end.... self contained exe
